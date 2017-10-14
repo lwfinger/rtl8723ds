@@ -2042,10 +2042,12 @@ u32 build_probe_resp_p2p_ie(struct wifidirect_info *pwdinfo, u8 *pbuf)
 			RTW_PUT_BE16(p2pie + p2pielen, pmlmepriv->p2p_sdt_scid[i]);
 			p2pielen += 2;
 		}
-	} else
+	} else {
 #endif /* CONFIG_INTEL_WIDI */
 		p2pie[p2pielen++] = 0x00;	/*	No Secondary Device Type List */
-
+#ifdef CONFIG_INTEL_WIDI
+	}
+#endif
 	/*	Device Name */
 	/*	Type: */
 	/* *(u16*) ( p2pie + p2pielen ) = cpu_to_be16( WPS_ATTR_DEVICE_NAME ); */

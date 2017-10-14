@@ -836,7 +836,7 @@ u32 mp_join(PADAPTER padapter, u8 mode)
 		goto end_of_mp_start_test;
 	}
 	if (mode == WIFI_FW_ADHOC_STATE)
-	set_fwstate(pmlmepriv, WIFI_ADHOC_MASTER_STATE);
+		set_fwstate(pmlmepriv, WIFI_ADHOC_MASTER_STATE);
 	else
 		set_fwstate(pmlmepriv, WIFI_STATION_STATE);
 	/* 3 3. join psudo AdHoc */

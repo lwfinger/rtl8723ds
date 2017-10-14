@@ -2142,6 +2142,7 @@ void rtw_sta_media_status_rpt(_adapter *adapter, struct sta_info *sta, bool conn
 			role = H2C_MSR_ROLE_TDLS;
 		else
 #endif
+		{
 			if (MLME_IS_STA(adapter)) {
 				if (MLME_IS_GC(adapter))
 					role = H2C_MSR_ROLE_GO;
@@ -2156,25 +2157,24 @@ void rtw_sta_media_status_rpt(_adapter *adapter, struct sta_info *sta, bool conn
 				role = H2C_MSR_ROLE_ADHOC;
 
 #ifdef CONFIG_WFD
-		if (role == H2C_MSR_ROLE_GC
-		    || role == H2C_MSR_ROLE_GO
-		    || role == H2C_MSR_ROLE_TDLS
-		   ) {
-			if (adapter->wfd_info.rtsp_ctrlport
-			    || adapter->wfd_info.tdls_rtsp_ctrlport
-			    || adapter->wfd_info.peer_rtsp_ctrlport)
-				rtw_wfd_st_switch(sta, 1);
-		}
+			if (role == H2C_MSR_ROLE_GC || role == H2C_MSR_ROLE_GO ||
+			    role == H2C_MSR_ROLE_TDLS) {
+				if (adapter->wfd_info.rtsp_ctrlport ||
+				    adapter->wfd_info.tdls_rtsp_ctrlport ||
+				    adapter->wfd_info.peer_rtsp_ctrlport)
+					rtw_wfd_st_switch(sta, 1);
+			}
 #endif
-	}
+		}
 
-	rtw_hal_set_FwMediaStatusRpt_single_cmd(adapter
+		rtw_hal_set_FwMediaStatusRpt_single_cmd(adapter
 						, connected
 						, miracast_enabled
 						, miracast_sink
 						, role
 						, sta->mac_id
 					       );
+	}
 }
 
 u8 rtw_sta_media_status_rpt_cmd(_adapter *adapter, struct sta_info *sta, bool connected)

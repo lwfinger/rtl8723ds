@@ -1067,7 +1067,7 @@ _adapter *rtw_get_iface_by_id(_adapter *padapter, u8 iface_id)
 	_adapter *iface = NULL;
 	struct dvobj_priv *dvobj = adapter_to_dvobj(padapter);
 
-	if ((padapter == NULL) || (iface_id >= CONFIG_IFACE_NUMBER)) {
+	if (iface_id >= CONFIG_IFACE_NUMBER) {
 		rtw_warn_on(1);
 		return iface;
 	}

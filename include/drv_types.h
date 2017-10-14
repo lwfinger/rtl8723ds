@@ -27,10 +27,6 @@
 #ifndef __DRV_TYPES_H__
 #define __DRV_TYPES_H__
 
-#ifndef is_compat_task
-#define is_compat_task() 0
-#endif
-
 #include <drv_conf.h>
 #include <basic_types.h>
 #include <osdep_service.h>
@@ -53,6 +49,10 @@
 
 #ifdef PLATFORM_LINUX
 	#include <drv_types_linux.h>
+#endif
+
+#ifndef is_compat_task
+#define is_compat_task() 0
 #endif
 
 enum _NIC_VERSION {

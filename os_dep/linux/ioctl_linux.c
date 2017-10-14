@@ -552,6 +552,7 @@ static inline char *iwe_stream_rate_process(_adapter *padapter,
 		max_rate = vht_data_rate;
 	else
 #endif
+	{
 		if (ht_cap == _TRUE) {
 			if (mcs_rate & 0x8000) /* MCS15 */
 				max_rate = (bw_40MHz) ? ((short_GI) ? 300 : 270) : ((short_GI) ? 144 : 130);
@@ -565,12 +566,12 @@ static inline char *iwe_stream_rate_process(_adapter *padapter,
 
 			max_rate = max_rate * 2; /* Mbps/2;		 */
 		}
-
+	}
 	iwe->cmd = SIOCGIWRATE;
 	iwe->u.bitrate.fixed = iwe->u.bitrate.disabled = 0;
 	iwe->u.bitrate.value = max_rate * 500000;
 	start = iwe_stream_add_event(info, start, stop, iwe, IW_EV_PARAM_LEN);
-	return start ;
+	return start;
 }
 
 static inline char *iwe_stream_wpa_wpa2_process(_adapter *padapter,
@@ -6539,96 +6540,86 @@ static int rtw_dbg_port(struct net_device *dev,
 		}
 		break;
 	case 0x78: /* IOL test */
-		switch (minor_cmd) {
 		#ifdef CONFIG_IOL
+		switch (minor_cmd) {
 		case 0x04: { /* LLT table initialization test */
 			u8 page_boundary = 0xf9;
-			{
-				struct xmit_frame	*xmit_frame;
+			struct xmit_frame	*xmit_frame;
 
-				xmit_frame = rtw_IOL_accquire_xmit_frame(padapter);
-				if (xmit_frame == NULL) {
-					ret = -ENOMEM;
-					break;
-				}
-
-				rtw_IOL_append_LLT_cmd(xmit_frame, page_boundary);
-
-
-				if (_SUCCESS != rtw_IOL_exec_cmds_sync(padapter, xmit_frame, 500, 0))
-					ret = -EPERM;
+			xmit_frame = rtw_IOL_accquire_xmit_frame(padapter);
+			if (xmit_frame == NULL) {
+				ret = -ENOMEM;
+				break;
 			}
+
+			rtw_IOL_append_LLT_cmd(xmit_frame, page_boundary);
+
+
+			if (_SUCCESS != rtw_IOL_exec_cmds_sync(padapter, xmit_frame, 500, 0))
+				ret = -EPERM;
 		}
-			break;
+		break;
 		case 0x05: { /* blink LED test */
 			u16 reg = 0x4c;
 			u32 blink_num = 50;
 			u32 blink_delay_ms = 200;
 			int i;
+			struct xmit_frame	*xmit_frame;
 
-			{
-				struct xmit_frame	*xmit_frame;
-
-				xmit_frame = rtw_IOL_accquire_xmit_frame(padapter);
-				if (xmit_frame == NULL) {
-					ret = -ENOMEM;
-					break;
-				}
-
-				for (i = 0; i < blink_num; i++) {
-					#ifdef CONFIG_IOL_NEW_GENERATION
-					rtw_IOL_append_WB_cmd(xmit_frame, reg, 0x00, 0xff);
-					rtw_IOL_append_DELAY_MS_cmd(xmit_frame, blink_delay_ms);
-					rtw_IOL_append_WB_cmd(xmit_frame, reg, 0x08, 0xff);
-					rtw_IOL_append_DELAY_MS_cmd(xmit_frame, blink_delay_ms);
-					#else
-					rtw_IOL_append_WB_cmd(xmit_frame, reg, 0x00);
-					rtw_IOL_append_DELAY_MS_cmd(xmit_frame, blink_delay_ms);
-					rtw_IOL_append_WB_cmd(xmit_frame, reg, 0x08);
-					rtw_IOL_append_DELAY_MS_cmd(xmit_frame, blink_delay_ms);
-					#endif
-				}
-				if (_SUCCESS != rtw_IOL_exec_cmds_sync(padapter, xmit_frame, (blink_delay_ms * blink_num * 2) + 200, 0))
-					ret = -EPERM;
+			xmit_frame = rtw_IOL_accquire_xmit_frame(padapter);
+			if (xmit_frame == NULL) {
+				ret = -ENOMEM;
+				break;
 			}
-		}
-			break;
 
+			for (i = 0; i < blink_num; i++) {
+				#ifdef CONFIG_IOL_NEW_GENERATION
+				rtw_IOL_append_WB_cmd(xmit_frame, reg, 0x00, 0xff);
+				rtw_IOL_append_DELAY_MS_cmd(xmit_frame, blink_delay_ms);
+				rtw_IOL_append_WB_cmd(xmit_frame, reg, 0x08, 0xff);
+				rtw_IOL_append_DELAY_MS_cmd(xmit_frame, blink_delay_ms);
+				#else
+				rtw_IOL_append_WB_cmd(xmit_frame, reg, 0x00);
+				rtw_IOL_append_DELAY_MS_cmd(xmit_frame, blink_delay_ms);
+				rtw_IOL_append_WB_cmd(xmit_frame, reg, 0x08);
+				rtw_IOL_append_DELAY_MS_cmd(xmit_frame, blink_delay_ms);
+				#endif
+			}
+			if (_SUCCESS != rtw_IOL_exec_cmds_sync(padapter, xmit_frame, (blink_delay_ms * blink_num * 2) + 200, 0))
+				ret = -EPERM;
+			}
+			break;
 		case 0x06: { /* continuous wirte byte test */
 			u16 reg = arg;
 			u16 start_value = 0;
 			u32 write_num = extra_arg;
 			int i;
 			u8 final;
+			struct xmit_frame	*xmit_frame;
 
-			{
-				struct xmit_frame	*xmit_frame;
-
-				xmit_frame = rtw_IOL_accquire_xmit_frame(padapter);
-				if (xmit_frame == NULL) {
-					ret = -ENOMEM;
-					break;
-				}
-
-				for (i = 0; i < write_num; i++) {
-					#ifdef CONFIG_IOL_NEW_GENERATION
-					rtw_IOL_append_WB_cmd(xmit_frame, reg, i + start_value, 0xFF);
-					#else
-					rtw_IOL_append_WB_cmd(xmit_frame, reg, i + start_value);
-					#endif
-				}
-				if (_SUCCESS != rtw_IOL_exec_cmds_sync(padapter, xmit_frame, 5000, 0))
-					ret = -EPERM;
+			xmit_frame = rtw_IOL_accquire_xmit_frame(padapter);
+			if (xmit_frame == NULL) {
+				ret = -ENOMEM;
+				break;
 			}
+
+			for (i = 0; i < write_num; i++) {
+				#ifdef CONFIG_IOL_NEW_GENERATION
+				rtw_IOL_append_WB_cmd(xmit_frame, reg, i + start_value, 0xFF);
+				#else
+				rtw_IOL_append_WB_cmd(xmit_frame, reg, i + start_value);
+				#endif
+			}
+			if (_SUCCESS != rtw_IOL_exec_cmds_sync(padapter, xmit_frame, 5000, 0))
+					ret = -EPERM;
 
 			final = rtw_read8(padapter, reg);
 			if (start_value + write_num - 1 == final)
 				RTW_INFO("continuous IOL_CMD_WB_REG to 0x%x %u times Success, start:%u, final:%u\n", reg, write_num, start_value, final);
 			else
 				RTW_INFO("continuous IOL_CMD_WB_REG to 0x%x %u times Fail, start:%u, final:%u\n", reg, write_num, start_value, final);
-		}
+			}
 			break;
-
 		case 0x07: { /* continuous wirte word test */
 			u16 reg = arg;
 			u16 start_value = 200;
@@ -6636,35 +6627,31 @@ static int rtw_dbg_port(struct net_device *dev,
 
 			int i;
 			u16 final;
+			struct xmit_frame	*xmit_frame;
 
-			{
-				struct xmit_frame	*xmit_frame;
-
-				xmit_frame = rtw_IOL_accquire_xmit_frame(padapter);
-				if (xmit_frame == NULL) {
-					ret = -ENOMEM;
-					break;
-				}
-
-				for (i = 0; i < write_num; i++) {
-					#ifdef CONFIG_IOL_NEW_GENERATION
-					rtw_IOL_append_WW_cmd(xmit_frame, reg, i + start_value, 0xFFFF);
-					#else
-					rtw_IOL_append_WW_cmd(xmit_frame, reg, i + start_value);
-					#endif
-				}
-				if (_SUCCESS != rtw_IOL_exec_cmds_sync(padapter, xmit_frame, 5000, 0))
-					ret = -EPERM;
+			xmit_frame = rtw_IOL_accquire_xmit_frame(padapter);
+			if (xmit_frame == NULL) {
+				ret = -ENOMEM;
+				break;
 			}
+
+			for (i = 0; i < write_num; i++) {
+				#ifdef CONFIG_IOL_NEW_GENERATION
+				rtw_IOL_append_WW_cmd(xmit_frame, reg, i + start_value, 0xFFFF);
+				#else
+				rtw_IOL_append_WW_cmd(xmit_frame, reg, i + start_value);
+				#endif
+			}
+			if (_SUCCESS != rtw_IOL_exec_cmds_sync(padapter, xmit_frame, 5000, 0))
+					ret = -EPERM;
 
 			final = rtw_read16(padapter, reg);
 			if (start_value + write_num - 1 == final)
 				RTW_INFO("continuous IOL_CMD_WW_REG to 0x%x %u times Success, start:%u, final:%u\n", reg, write_num, start_value, final);
 			else
 				RTW_INFO("continuous IOL_CMD_WW_REG to 0x%x %u times Fail, start:%u, final:%u\n", reg, write_num, start_value, final);
-		}
+			}
 			break;
-
 		case 0x08: { /* continuous wirte dword test */
 			u16 reg = arg;
 			u32 start_value = 0x110000c7;
@@ -6672,37 +6659,33 @@ static int rtw_dbg_port(struct net_device *dev,
 
 			int i;
 			u32 final;
+			struct xmit_frame	*xmit_frame;
 
-			{
-				struct xmit_frame	*xmit_frame;
-
-				xmit_frame = rtw_IOL_accquire_xmit_frame(padapter);
-				if (xmit_frame == NULL) {
-					ret = -ENOMEM;
-					break;
-				}
-
-				for (i = 0; i < write_num; i++) {
-					#ifdef CONFIG_IOL_NEW_GENERATION
-					rtw_IOL_append_WD_cmd(xmit_frame, reg, i + start_value, 0xFFFFFFFF);
-					#else
-					rtw_IOL_append_WD_cmd(xmit_frame, reg, i + start_value);
-					#endif
-				}
-				if (_SUCCESS != rtw_IOL_exec_cmds_sync(padapter, xmit_frame, 5000, 0))
-					ret = -EPERM;
-
+			xmit_frame = rtw_IOL_accquire_xmit_frame(padapter);
+			if (xmit_frame == NULL) {
+				ret = -ENOMEM;
+				break;
 			}
+
+			for (i = 0; i < write_num; i++) {
+				#ifdef CONFIG_IOL_NEW_GENERATION
+				rtw_IOL_append_WD_cmd(xmit_frame, reg, i + start_value, 0xFFFFFFFF);
+				#else
+				rtw_IOL_append_WD_cmd(xmit_frame, reg, i + start_value);
+				#endif
+			}
+			if (_SUCCESS != rtw_IOL_exec_cmds_sync(padapter, xmit_frame, 5000, 0))
+					ret = -EPERM;
 
 			final = rtw_read32(padapter, reg);
 			if (start_value + write_num - 1 == final)
 				RTW_INFO("continuous IOL_CMD_WD_REG to 0x%x %u times Success, start:%u, final:%u\n", reg, write_num, start_value, final);
 			else
 				RTW_INFO("continuous IOL_CMD_WD_REG to 0x%x %u times Fail, start:%u, final:%u\n", reg, write_num, start_value, final);
-		}
+			}
 			break;
-		#endif /* CONFIG_IOL */
 		}
+		#endif /* CONFIG_IOL */
 		break;
 	case 0x79: {
 		/*
@@ -6939,31 +6922,34 @@ static int rtw_dbg_port(struct net_device *dev,
 			struct registry_priv	*pregpriv = &padapter->registrypriv;
 			/* 0: disable, bit(0):enable 2.4g, bit(1):enable 5g, 0x3: enable both 2.4g and 5g */
 			/* default is set to enable 2.4GHZ for IOT issue with bufflao's AP at 5GHZ */
-			if (pregpriv && (extra_arg == 0 || extra_arg == 1 || extra_arg == 2 || extra_arg == 3)) {
+			if (!pregpriv)
+				break;
+			if (extra_arg == 0 || extra_arg == 1 || extra_arg == 2 || extra_arg == 3) {
 				pregpriv->rx_stbc = extra_arg;
 				RTW_INFO("set rx_stbc=%d\n", pregpriv->rx_stbc);
-			} else
+			} else {
 				RTW_INFO("get rx_stbc=%d\n", pregpriv->rx_stbc);
-
+			}
 		}
 			break;
 		case 0x13: { /* set ampdu_enable */
 			struct registry_priv	*pregpriv = &padapter->registrypriv;
 			/* 0: disable, 0x1:enable */
-			if (pregpriv && extra_arg < 2) {
+			if (!pregpriv)
+				break;
+			if (extra_arg < 2) {
 				pregpriv->ampdu_enable = extra_arg;
 				RTW_INFO("set ampdu_enable=%d\n", pregpriv->ampdu_enable);
-			} else
+			} else {
 				RTW_INFO("get ampdu_enable=%d\n", pregpriv->ampdu_enable);
-
-		}
+			}
+			}
 			break;
 #endif
 		case 0x14: { /* get wifi_spec */
-			struct registry_priv	*pregpriv = &padapter->registrypriv;
-			RTW_INFO("get wifi_spec=%d\n", pregpriv->wifi_spec);
-
-		}
+				struct registry_priv	*pregpriv = &padapter->registrypriv;
+				RTW_INFO("get wifi_spec=%d\n", pregpriv->wifi_spec);
+			}
 			break;
 		case 0x16: {
 			if (arg == 0xff)

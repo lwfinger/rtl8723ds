@@ -59,9 +59,9 @@ odm_ConfigRF_RadioA_8723D(
 	u4Byte  content = 0x1000; // RF_Content: radioa_txt
 	u4Byte	maskforPhySet= (u4Byte)(content&0xE000);
 
-    odm_ConfigRFReg_8723D(pDM_Odm, Addr, Data, ODM_RF_PATH_A, Addr|maskforPhySet);
+	odm_ConfigRFReg_8723D(pDM_Odm, Addr, Data, ODM_RF_PATH_A, Addr|maskforPhySet);
 
-    ODM_RT_TRACE(pDM_Odm,ODM_COMP_INIT, ODM_DBG_TRACE, ("===> ODM_ConfigRFWithHeaderFile: [RadioA] %08X %08X\n", Addr, Data));
+	ODM_RT_TRACE(pDM_Odm,ODM_COMP_INIT, ODM_DBG_TRACE, ("===> ODM_ConfigRFWithHeaderFile: [RadioA] %08X %08X\n", Addr, Data));
 }
 
 void 
@@ -74,7 +74,7 @@ odm_ConfigRF_RadioB_8723D(
 	u4Byte  content = 0x1001; // RF_Content: radiob_txt
 	u4Byte	maskforPhySet= (u4Byte)(content&0xE000);
 
-    odm_ConfigRFReg_8723D(pDM_Odm, Addr, Data, ODM_RF_PATH_B, Addr|maskforPhySet);
+	odm_ConfigRFReg_8723D(pDM_Odm, Addr, Data, ODM_RF_PATH_B, Addr|maskforPhySet);
 	
 	ODM_RT_TRACE(pDM_Odm,ODM_COMP_INIT, ODM_DBG_TRACE, ("===> ODM_ConfigRFWithHeaderFile: [RadioB] %08X %08X\n", Addr, Data));
     
@@ -88,7 +88,7 @@ odm_ConfigMAC_8723D(
  	)
 {
 	ODM_Write1Byte(pDM_Odm, Addr, Data);
-    ODM_RT_TRACE(pDM_Odm,ODM_COMP_INIT, ODM_DBG_TRACE, ("===> ODM_ConfigMACWithHeaderFile: [MAC_REG] %08X %08X\n", Addr, Data));
+	ODM_RT_TRACE(pDM_Odm,ODM_COMP_INIT, ODM_DBG_TRACE, ("===> ODM_ConfigMACWithHeaderFile: [MAC_REG] %08X %08X\n", Addr, Data));
 }
 
 void 
@@ -103,7 +103,7 @@ odm_ConfigBB_AGC_8723D(
 	// Add 1us delay between BB/RF register setting.
 	ODM_delay_us(1);
 
-    ODM_RT_TRACE(pDM_Odm,ODM_COMP_INIT, ODM_DBG_TRACE, ("===> ODM_ConfigBBWithHeaderFile: [AGC_TAB] %08X %08X\n", Addr, Data));
+	ODM_RT_TRACE(pDM_Odm,ODM_COMP_INIT, ODM_DBG_TRACE, ("===> ODM_ConfigBBWithHeaderFile: [AGC_TAB] %08X %08X\n", Addr, Data));
 }
 
 void
@@ -164,7 +164,7 @@ odm_ConfigBB_PHY_8723D(
 	
 	// Add 1us delay between BB/RF register setting.
 	ODM_delay_us(1);
-    ODM_RT_TRACE(pDM_Odm,ODM_COMP_INIT, ODM_DBG_TRACE, ("===> ODM_ConfigBBWithHeaderFile: [PHY_REG] %08X %08X\n", Addr, Data));
+	ODM_RT_TRACE(pDM_Odm,ODM_COMP_INIT, ODM_DBG_TRACE, ("===> ODM_ConfigBBWithHeaderFile: [PHY_REG] %08X %08X\n", Addr, Data));
 }
 
 void
