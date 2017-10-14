@@ -392,7 +392,7 @@ static VOID PHY_SetRFPathSwitch_default(
 }
 
 
-void mpt_InitHWConfig(PADAPTER Adapter)
+static void mpt_InitHWConfig(PADAPTER Adapter)
 {
 	if (IS_HARDWARE_TYPE_8723B(Adapter)) {
 		/* TODO: <20130114, Kordan> The following setting is only for DPDT and Fixed board type. */
@@ -1121,7 +1121,7 @@ int SetTxPower(PADAPTER pAdapter)
 	return _TRUE;
 }
 
-void SetTxAGCOffset(PADAPTER pAdapter, u32 ulTxAGCOffset)
+static void SetTxAGCOffset(PADAPTER pAdapter, u32 ulTxAGCOffset)
 {
 	u32 TxAGCOffset_B, TxAGCOffset_C, TxAGCOffset_D, tmpAGC;
 
@@ -1185,13 +1185,13 @@ void SetCarrierSuppressionTx(PADAPTER pAdapter, u8 bStart)
 	hal_mpt_SetCarrierSuppressionTx(pAdapter, bStart);
 }
 
-void SetCCKContinuousTx(PADAPTER pAdapter, u8 bStart)
+static void SetCCKContinuousTx(PADAPTER pAdapter, u8 bStart)
 {
 	PhySetTxPowerLevel(pAdapter);
 	hal_mpt_SetCCKContinuousTx(pAdapter, bStart);
 }
 
-void SetOFDMContinuousTx(PADAPTER pAdapter, u8 bStart)
+static void SetOFDMContinuousTx(PADAPTER pAdapter, u8 bStart)
 {
 	PhySetTxPowerLevel(pAdapter);
 	hal_mpt_SetOFDMContinuousTx(pAdapter, bStart);
@@ -1626,7 +1626,7 @@ void fill_tx_desc_8188f(PADAPTER padapter)
 #endif
 
 #if defined(CONFIG_RTL8723D)
-void fill_tx_desc_8723d(PADAPTER padapter)
+static void fill_tx_desc_8723d(PADAPTER padapter)
 {
 	struct mp_priv *pmp_priv = &padapter->mppriv;
 	struct pkt_attrib *pattrib = &(pmp_priv->tx.attrib);

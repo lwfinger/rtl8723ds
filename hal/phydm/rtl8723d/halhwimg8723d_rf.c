@@ -124,7 +124,7 @@ CheckNegative(
 *                           RadioA.TXT
 ******************************************************************************/
 
-u4Byte Array_MP_8723D_RadioA[] = { 
+static u4Byte Array_MP_8723D_RadioA[] = { 
 		0x050, 0x00019000,
 		0x000, 0x00010000,
 		0x0B1, 0x00054573,
@@ -430,34 +430,34 @@ ODM_ReadAndConfig_MP_8723D_TxPowerTrack_PCIE(
 ******************************************************************************/
 
 #if DEV_BUS_TYPE == RT_SDIO_INTERFACE
-u1Byte gDeltaSwingTableIdx_MP_5GB_N_TxPowerTrack_SDIO_8723D[][DELTA_SWINGIDX_SIZE] = {
+static u1Byte gDeltaSwingTableIdx_MP_5GB_N_TxPowerTrack_SDIO_8723D[][DELTA_SWINGIDX_SIZE] = {
 	{0, 1, 2, 3, 3, 5, 5, 6, 6, 7, 8, 9, 10, 11, 11, 12, 12, 13, 13, 14, 14, 15, 16, 17, 17, 17, 17, 18, 18, 18},
 	{0, 1, 2, 3, 3, 5, 5, 6, 6, 7, 8, 9, 10, 11, 11, 12, 13, 14, 14, 15, 15, 16, 16, 17, 17, 18, 18, 18, 18, 18},
 	{0, 1, 2, 3, 3, 5, 5, 6, 6, 7, 8, 9, 10, 11, 11, 12, 13, 14, 14, 15, 15, 16, 16, 17, 17, 18, 18, 18, 18, 18},
 };
-u1Byte gDeltaSwingTableIdx_MP_5GB_P_TxPowerTrack_SDIO_8723D[][DELTA_SWINGIDX_SIZE] = {
+static u1Byte gDeltaSwingTableIdx_MP_5GB_P_TxPowerTrack_SDIO_8723D[][DELTA_SWINGIDX_SIZE] = {
 	{0, 1, 1, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15},
 	{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15},
 	{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15},
 };
-u1Byte gDeltaSwingTableIdx_MP_5GA_N_TxPowerTrack_SDIO_8723D[][DELTA_SWINGIDX_SIZE] = {
+static u1Byte gDeltaSwingTableIdx_MP_5GA_N_TxPowerTrack_SDIO_8723D[][DELTA_SWINGIDX_SIZE] = {
 	{0, 1, 2, 3, 3, 5, 5, 6, 6, 7, 8, 9, 10, 11, 11, 12, 12, 13, 13, 14, 14, 15, 16, 17, 17, 17, 17, 18, 18, 18},
 	{0, 1, 2, 3, 3, 5, 5, 6, 6, 7, 8, 9, 10, 11, 11, 12, 13, 14, 14, 15, 15, 16, 16, 17, 17, 18, 18, 18, 18, 18},
 	{0, 1, 2, 3, 3, 5, 5, 6, 6, 7, 8, 9, 10, 11, 11, 12, 13, 14, 14, 15, 15, 16, 16, 17, 17, 18, 18, 18, 18, 18},
 };
-u1Byte gDeltaSwingTableIdx_MP_5GA_P_TxPowerTrack_SDIO_8723D[][DELTA_SWINGIDX_SIZE] = {
+static u1Byte gDeltaSwingTableIdx_MP_5GA_P_TxPowerTrack_SDIO_8723D[][DELTA_SWINGIDX_SIZE] = {
 	{0, 1, 1, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15},
 	{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15},
 	{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15},
 };
-u1Byte gDeltaSwingTableIdx_MP_2GB_N_TxPowerTrack_SDIO_8723D[]    = {0, 0, 1, 1, 1, 2, 2, 3, 4, 4, 4, 4, 5, 5, 5, 6, 6, 7, 7, 8, 8, 8, 9, 9, 9, 10, 10, 10, 10, 10};
-u1Byte gDeltaSwingTableIdx_MP_2GB_P_TxPowerTrack_SDIO_8723D[]    = {0, 0, 1, 1, 2, 2, 2, 3, 3, 4, 4, 5, 5, 6, 7, 7, 8, 8, 8, 9, 9, 10, 10, 10, 10, 10, 10, 10, 10, 10};
-u1Byte gDeltaSwingTableIdx_MP_2GA_N_TxPowerTrack_SDIO_8723D[]    = {0, 0, 1, 1, 1, 2, 2, 3, 4, 4, 4, 4, 5, 5, 5, 6, 6, 7, 7, 8, 8, 8, 9, 9, 9, 10, 10, 10, 10, 10};
-u1Byte gDeltaSwingTableIdx_MP_2GA_P_TxPowerTrack_SDIO_8723D[]    = {0, 0, 1, 1, 2, 2, 2, 3, 3, 4, 4, 5, 5, 6, 7, 7, 8, 8, 8, 9, 9, 10, 10, 10, 10, 10, 10, 10, 10, 10};
-u1Byte gDeltaSwingTableIdx_MP_2GCCKB_N_TxPowerTrack_SDIO_8723D[] = {0, 1, 1, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 6, 7, 7, 7, 8, 8, 9, 9, 10, 10, 11, 11, 11, 11, 11};
-u1Byte gDeltaSwingTableIdx_MP_2GCCKB_P_TxPowerTrack_SDIO_8723D[] = {0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 9, 9, 10, 10, 11, 11, 11, 11, 11, 11, 11, 11, 11};
-u1Byte gDeltaSwingTableIdx_MP_2GCCKA_N_TxPowerTrack_SDIO_8723D[] = {0, 1, 1, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 6, 7, 7, 7, 8, 8, 9, 9, 10, 10, 11, 11, 11, 11, 11};
-u1Byte gDeltaSwingTableIdx_MP_2GCCKA_P_TxPowerTrack_SDIO_8723D[] = {0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 9, 9, 10, 10, 11, 11, 11, 11, 11, 11, 11, 11, 11};
+static u1Byte gDeltaSwingTableIdx_MP_2GB_N_TxPowerTrack_SDIO_8723D[]    = {0, 0, 1, 1, 1, 2, 2, 3, 4, 4, 4, 4, 5, 5, 5, 6, 6, 7, 7, 8, 8, 8, 9, 9, 9, 10, 10, 10, 10, 10};
+static u1Byte gDeltaSwingTableIdx_MP_2GB_P_TxPowerTrack_SDIO_8723D[]    = {0, 0, 1, 1, 2, 2, 2, 3, 3, 4, 4, 5, 5, 6, 7, 7, 8, 8, 8, 9, 9, 10, 10, 10, 10, 10, 10, 10, 10, 10};
+static u1Byte gDeltaSwingTableIdx_MP_2GA_N_TxPowerTrack_SDIO_8723D[]    = {0, 0, 1, 1, 1, 2, 2, 3, 4, 4, 4, 4, 5, 5, 5, 6, 6, 7, 7, 8, 8, 8, 9, 9, 9, 10, 10, 10, 10, 10};
+static u1Byte gDeltaSwingTableIdx_MP_2GA_P_TxPowerTrack_SDIO_8723D[]    = {0, 0, 1, 1, 2, 2, 2, 3, 3, 4, 4, 5, 5, 6, 7, 7, 8, 8, 8, 9, 9, 10, 10, 10, 10, 10, 10, 10, 10, 10};
+static u1Byte gDeltaSwingTableIdx_MP_2GCCKB_N_TxPowerTrack_SDIO_8723D[] = {0, 1, 1, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 6, 7, 7, 7, 8, 8, 9, 9, 10, 10, 11, 11, 11, 11, 11};
+static u1Byte gDeltaSwingTableIdx_MP_2GCCKB_P_TxPowerTrack_SDIO_8723D[] = {0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 9, 9, 10, 10, 11, 11, 11, 11, 11, 11, 11, 11, 11};
+static u1Byte gDeltaSwingTableIdx_MP_2GCCKA_N_TxPowerTrack_SDIO_8723D[] = {0, 1, 1, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 6, 7, 7, 7, 8, 8, 9, 9, 10, 10, 11, 11, 11, 11, 11};
+static u1Byte gDeltaSwingTableIdx_MP_2GCCKA_P_TxPowerTrack_SDIO_8723D[] = {0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 9, 9, 10, 10, 11, 11, 11, 11, 11, 11, 11, 11, 11};
 #endif
 
 void
@@ -555,7 +555,7 @@ ODM_ReadAndConfig_MP_8723D_TxPowerTrack_USB(
 *                           TXPWR_LMT.TXT
 ******************************************************************************/
 
-const char *Array_MP_8723D_TXPWR_LMT[] = { 
+static const char *Array_MP_8723D_TXPWR_LMT[] = { 
 	"FCC", "2.4G", "20M", "CCK", "1T", "01", "30", 
 	"ETSI", "2.4G", "20M", "CCK", "1T", "01", "30", 
 	"MKK", "2.4G", "20M", "CCK", "1T", "01", "30",
@@ -1178,8 +1178,8 @@ ODM_ReadAndConfig_MP_8723D_TXPWR_LMT(
 *                           TxXtalTrack.TXT
 ******************************************************************************/
 
-s1Byte gDeltaSwingTableXtal_MP_N_TxXtalTrack_8723D[]    = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-s1Byte gDeltaSwingTableXtal_MP_P_TxXtalTrack_8723D[]    = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -10, -12, -14, -16, -16, -16, -16, -16, -16, -16, -16, -16, -16, -16};
+static s1Byte gDeltaSwingTableXtal_MP_N_TxXtalTrack_8723D[]    = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+static s1Byte gDeltaSwingTableXtal_MP_P_TxXtalTrack_8723D[]    = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -10, -12, -14, -16, -16, -16, -16, -16, -16, -16, -16, -16, -16, -16};
 
 void
 ODM_ReadAndConfig_MP_8723D_TxXtalTrack(

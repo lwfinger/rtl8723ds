@@ -292,7 +292,7 @@ phydm_checkNHMready(
 	return ret;
 }
 
-VOID
+static VOID
 phydm_storeNHMsetting(
 	IN		PVOID		pDM_VOID
 )

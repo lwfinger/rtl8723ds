@@ -364,23 +364,23 @@ enum WIFI_REG_DOMAIN {
 
 #define SetFrameType(pbuf, type)	\
 	do {	\
-		*(unsigned short *)(pbuf) &= __constant_cpu_to_le16(~(BIT(3) | BIT(2))); \
-		*(unsigned short *)(pbuf) |= __constant_cpu_to_le16(type); \
+		*(__le16 *)(pbuf) &= __constant_cpu_to_le16(~(BIT(3) | BIT(2))); \
+		*(__le16 *)(pbuf) |= __constant_cpu_to_le16(type); \
 	} while (0)
 
-#define GetFrameSubType(pbuf)	(cpu_to_le16(*(unsigned short *)(pbuf)) & (BIT(7) | BIT(6) | BIT(5) | BIT(4) | BIT(3) | BIT(2)))
+#define GetFrameSubType(pbuf)	(cpu_to_le16(*(__le16 *)(pbuf)) & (BIT(7) | BIT(6) | BIT(5) | BIT(4) | BIT(3) | BIT(2)))
 
 #define SetFrameSubType(pbuf, type) \
 	do {    \
-		*(unsigned short *)(pbuf) &= cpu_to_le16(~(BIT(7) | BIT(6) | BIT(5) | BIT(4) | BIT(3) | BIT(2))); \
-		*(unsigned short *)(pbuf) |= cpu_to_le16(type); \
+		*(__le16 *)(pbuf) &= cpu_to_le16(~(BIT(7) | BIT(6) | BIT(5) | BIT(4) | BIT(3) | BIT(2))); \
+		*(__le16 *)(pbuf) |= cpu_to_le16(type); \
 	} while (0)
 
-#define GetSequence(pbuf)	(cpu_to_le16(*(unsigned short *)((SIZE_PTR)(pbuf) + 22)) >> 4)
+#define GetSequence(pbuf)	(cpu_to_le16(*(__le16 *)((SIZE_PTR)(pbuf) + 22)) >> 4)
 
-#define GetFragNum(pbuf)	(cpu_to_le16(*(unsigned short *)((SIZE_PTR)(pbuf) + 22)) & 0x0f)
+#define GetFragNum(pbuf)	(cpu_to_le16(*(__le16 *)((SIZE_PTR)(pbuf) + 22)) & 0x0f)
 
-#define GetTupleCache(pbuf)	(cpu_to_le16(*(unsigned short *)((SIZE_PTR)(pbuf) + 22)))
+#define GetTupleCache(pbuf)	(cpu_to_le16(*(__le16 *)((SIZE_PTR)(pbuf) + 22)))
 
 #define SetFragNum(pbuf, num) \
 	do {    \
@@ -407,7 +407,7 @@ enum WIFI_REG_DOMAIN {
 		*(unsigned short *)(pbuf) |= cpu_to_le16(tid & 0xf); \
 	} while (0)
 
-#define GetPriority(pbuf)	((le16_to_cpu(*(unsigned short *)(pbuf))) & 0xf)
+#define GetPriority(pbuf)	((le16_to_cpu(*(__le16 *)(pbuf))) & 0xf)
 
 #define SetEOSP(pbuf, eosp)	\
 	do	{	\

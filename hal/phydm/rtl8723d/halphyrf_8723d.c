@@ -58,7 +58,7 @@
 /* Tx Power Tracking*/
 
 
-void setIqkMatrix_8723D(PDM_ODM_T	pDM_Odm,
+static void setIqkMatrix_8723D(PDM_ODM_T	pDM_Odm,
 		u1Byte		OFDM_index,
 		u1Byte		RFPath,
 		s4Byte		IqkResult_X,
@@ -738,7 +738,7 @@ GetDeltaSwingTable_8723D(
 	return;
 }
 
-VOID
+static VOID
 GetDeltaSwingXtalTable_8723D(
 	PVOID		pDM_VOID,
 	ps1Byte		*TemperatureUP_Xtal,
@@ -809,7 +809,7 @@ void ConfigureTxpowerTrack_8723D(
 #define MAX_TOLERANCE		5
 #define IQK_DELAY_TIME		1		
 
-u1Byte			
+static u1Byte			
 phy_PathS1_IQK_8723D(
 #if (DM_ODM_SUPPORT_TYPE & ODM_AP)
 		IN PDM_ODM_T		pDM_Odm
@@ -955,7 +955,7 @@ phy_PathS1_IQK_8723D(
 	
 	}
 
-u1Byte			
+static u1Byte			
 phy_PathS1_RxIQK_8723D(
 #if (DM_ODM_SUPPORT_TYPE & ODM_AP)
 			IN PDM_ODM_T		pDM_Odm
@@ -1205,7 +1205,7 @@ phy_PathS1_RxIQK_8723D(
 }
 		
 
-u1Byte				
+static u1Byte				
 phy_PathS0_IQK_8723D(
 #if (DM_ODM_SUPPORT_TYPE & ODM_AP)
 	IN PDM_ODM_T		pDM_Odm
@@ -1345,7 +1345,7 @@ phy_PathS0_IQK_8723D(
 	return result;
 }
 
-u1Byte			
+static u1Byte			
 phy_PathS0_RxIQK_8723D(
 #if (DM_ODM_SUPPORT_TYPE & ODM_AP)
 	IN PDM_ODM_T		pDM_Odm,
@@ -1587,7 +1587,7 @@ phy_PathS0_RxIQK_8723D(
 }
 
 
-VOID
+static VOID
 _PHY_PathS1FillIQKMatrix_8723D(
 #if (DM_ODM_SUPPORT_TYPE & ODM_AP)
 		IN PDM_ODM_T		pDM_Odm,
@@ -1675,7 +1675,7 @@ _PHY_PathS1FillIQKMatrix_8723D(
 		}
 	}
 
-VOID
+static VOID
 _PHY_PathS0FillIQKMatrix_8723D(
 #if (DM_ODM_SUPPORT_TYPE & ODM_AP)
 	IN PDM_ODM_T		pDM_Odm,
@@ -1759,7 +1759,7 @@ _PHY_PathS0FillIQKMatrix_8723D(
 //
 // MP Already declare in odm.c 
 #if !(DM_ODM_SUPPORT_TYPE & ODM_WIN) 
-BOOLEAN
+static BOOLEAN
 ODM_CheckPowerStatus(
 	IN	PADAPTER		Adapter)
 {
@@ -1824,7 +1824,7 @@ _PHY_SaveADDARegisters_8723D(
 }
 
 
-VOID
+static VOID
 _PHY_SaveMACRegisters_8723D(
 #if (DM_ODM_SUPPORT_TYPE & ODM_AP)
 	IN PDM_ODM_T		pDM_Odm,
@@ -1854,7 +1854,7 @@ _PHY_SaveMACRegisters_8723D(
 }
 
 
-VOID
+static VOID
 _PHY_ReloadADDARegisters_8723D(
 #if (DM_ODM_SUPPORT_TYPE & ODM_AP)
 	IN PDM_ODM_T		pDM_Odm,
@@ -1883,7 +1883,7 @@ _PHY_ReloadADDARegisters_8723D(
 	}
 }
 
-VOID
+static VOID
 _PHY_ReloadMACRegisters_8723D(
 #if (DM_ODM_SUPPORT_TYPE & ODM_AP)
 	IN PDM_ODM_T		pDM_Odm,
@@ -1993,7 +1993,7 @@ _PHY_MACSettingCalibration_8723D(
 
 }
 
-VOID
+static VOID
 _PHY_PathAStandBy_8723D(
 #if (DM_ODM_SUPPORT_TYPE & ODM_AP)
 	IN PDM_ODM_T		pDM_Odm
@@ -2020,7 +2020,7 @@ _PHY_PathAStandBy_8723D(
 	ODM_SetBBReg(pDM_Odm, rFPGA0_IQK, 0xffffff00, 0x808000);
 }
 
-VOID
+static VOID
 _PHY_PathBStandBy_8723D(
 #if (DM_ODM_SUPPORT_TYPE & ODM_AP)
 	IN PDM_ODM_T		pDM_Odm
@@ -2047,7 +2047,7 @@ _PHY_PathBStandBy_8723D(
 }
 
 
-VOID
+static VOID
 _PHY_PIModeSwitch_8723D(
 #if (DM_ODM_SUPPORT_TYPE & ODM_AP)
 	IN PDM_ODM_T		pDM_Odm,
@@ -2074,7 +2074,7 @@ _PHY_PIModeSwitch_8723D(
 	ODM_SetBBReg(pDM_Odm, rFPGA0_XB_HSSIParameter1, bMaskDWord, mode);
 }
 
-BOOLEAN							
+static BOOLEAN							
 phy_SimularityCompare_8723D(
 #if (DM_ODM_SUPPORT_TYPE & ODM_AP)
 	IN PDM_ODM_T		pDM_Odm,
@@ -2186,7 +2186,7 @@ phy_SimularityCompare_8723D(
 	}
 }
 
-VOID	
+static VOID	
 phy_IQCalibrate_8723D(
 #if (DM_ODM_SUPPORT_TYPE & ODM_AP)
 	IN PDM_ODM_T		pDM_Odm,
@@ -2514,7 +2514,7 @@ phy_IQCalibrate_8723D(
 	ODM_RT_TRACE(pDM_Odm,ODM_COMP_CALIBRATION, ODM_DBG_LOUD, ("phy_IQCalibrate_8723D() <==\n"));
 }
 
-VOID	
+static VOID	
 phy_LCCalibrate_8723D(
 #if (DM_ODM_SUPPORT_TYPE & ODM_CE)
 	PVOID		pDM_VOID,
@@ -2570,7 +2570,7 @@ phy_LCCalibrate_8723D(
 #define		APK_CURVE_REG_NUM 4
 #define		PATH_NUM		2
 
-VOID	
+static VOID	
 phy_APCalibrate_8723D(
 #if (DM_ODM_SUPPORT_TYPE & ODM_AP)
 	IN PDM_ODM_T		pDM_Odm,
@@ -3499,7 +3499,7 @@ PHY_APCalibrate_8723D(
 #endif
 }
 
-VOID phy_SetRFPathSwitch_8723D(
+static VOID phy_SetRFPathSwitch_8723D(
 #if (DM_ODM_SUPPORT_TYPE & ODM_AP)
 	IN PDM_ODM_T		pDM_Odm,
 #else

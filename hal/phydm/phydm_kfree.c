@@ -28,7 +28,7 @@
 /*<YuChen, 150720> Add for KFree Feature Requested by RF David.*/
 /*This is a phydm API*/
 
-VOID
+static VOID
 phydm_SetKfreeToRF_8814A(
 	IN	PVOID		pDM_VOID,
 	IN	u1Byte		eRFPath,
@@ -119,7 +119,7 @@ phydm_SetKfreeToRF_8814A(
 }
 
 
-VOID
+static VOID
 phydm_SetKfreeToRF(
 	IN	PVOID		pDM_VOID,
 	IN	u1Byte		eRFPath,
