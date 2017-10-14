@@ -14,6 +14,13 @@
 *.la
 *.lo
 
+# temporary files
+*.cmd
+modules.order
+*.mod.c
+Module.symvers
+*.patch
+
 # Shared objects (inc. Windows DLLs)
 *.dll
 *.so
