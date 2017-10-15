@@ -2281,6 +2281,11 @@ static int cfg80211_rtw_scan(struct wiphy *wiphy
 #ifdef CONFIG_P2P
 	struct wifidirect_info *pwdinfo;
 #endif /* CONFIG_P2P */
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 8, 0))
+	struct cfg80211_scan_info info = {
+		.aborted = 0
+	};
+#endif
 
 #if (LINUX_VERSION_CODE >= KERNEL_VERSION(3, 6, 0))
 	wdev = request->wdev;
@@ -2481,7 +2486,11 @@ static int cfg80211_rtw_scan(struct wiphy *wiphy
 check_need_indicate_scan_done:
 	if (_TRUE == need_indicate_scan_done) {
 		_rtw_cfg80211_surveydone_event_callback(padapter, request);
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 8, 0))
+		cfg80211_scan_done(request, &info);
+#else
 		cfg80211_scan_done(request, 0);
+#endif
 	}
 
 cancel_ps_deny:
