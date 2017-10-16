@@ -128,7 +128,7 @@ odm_DynamicTxPowerWritePowerIndex(
 
 }
 
-VOID 
+static VOID 
 odm_DynamicTxPowerNIC_CE(
 	IN		PVOID					pDM_VOID
 	)

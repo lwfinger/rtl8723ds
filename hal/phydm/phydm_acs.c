@@ -51,7 +51,7 @@ ODM_GetAutoChannelSelectResult(
 
 }
 
-VOID
+static VOID
 odm_AutoChannelSelectSetting(
 	IN		PVOID			pDM_VOID,
 	IN		BOOLEAN			IsEnable

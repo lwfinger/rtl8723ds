@@ -20,7 +20,7 @@
 #include "mp_precomp.h"
 #include "phydm_precomp.h"
 
-VOID
+static VOID
 odm_SetCrystalCap(
 	IN		PVOID					pDM_VOID,
 	IN		u1Byte					CrystalCap
@@ -65,7 +65,7 @@ odm_SetCrystalCap(
 #endif
 }
 
-u1Byte
+static u1Byte
 odm_GetDefaultCrytaltalCap(
 	IN		PVOID					pDM_VOID
 )
@@ -90,7 +90,7 @@ odm_GetDefaultCrytaltalCap(
 	return CrystalCap;
 }
 
-VOID
+static VOID
 odm_SetATCStatus(
 	IN		PVOID					pDM_VOID,
 	IN		BOOLEAN					ATCStatus
@@ -106,7 +106,7 @@ odm_SetATCStatus(
 	pCfoTrack->bATCStatus = ATCStatus;
 }
 
-BOOLEAN
+static BOOLEAN
 odm_GetATCStatus(
 	IN		PVOID					pDM_VOID
 )

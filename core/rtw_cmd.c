@@ -2141,7 +2141,7 @@ exit:
 	return res;
 }
 
-u8 _rtw_set_chplan_cmd(_adapter *adapter, int flags, u8 chplan, const struct country_chplan *country_ent, u8 swconfig)
+static u8 _rtw_set_chplan_cmd(_adapter *adapter, int flags, u8 chplan, const struct country_chplan *country_ent, u8 swconfig)
 {
 	struct cmd_obj *cmdobj;
 	struct	SetChannelPlan_param *parm;
@@ -2675,7 +2675,7 @@ void rtw_iface_dynamic_chk_wk_hdl(_adapter *padapter)
 	#endif
 
 }
-void rtw_dynamic_chk_wk_hdl(_adapter *padapter)
+static void rtw_dynamic_chk_wk_hdl(_adapter *padapter)
 {
 	rtw_mi_dynamic_chk_wk_hdl(padapter);
 
@@ -2835,7 +2835,7 @@ exit:
 
 }
 
-void rtw_dm_in_lps_hdl(_adapter *padapter)
+static void rtw_dm_in_lps_hdl(_adapter *padapter)
 {
 	rtw_hal_set_hwreg(padapter, HW_VAR_DM_IN_LPS, NULL);
 }
@@ -2876,7 +2876,7 @@ exit:
 
 }
 
-void rtw_lps_change_dtim_hdl(_adapter *padapter, u8 dtim)
+static void rtw_lps_change_dtim_hdl(_adapter *padapter, u8 dtim)
 {
 	struct pwrctrl_priv *pwrpriv = adapter_to_pwrctl(padapter);
 
@@ -3055,7 +3055,7 @@ exit:
 }
 #endif
 
-void rtw_dm_ra_mask_hdl(_adapter *padapter, struct sta_info *psta)
+static void rtw_dm_ra_mask_hdl(_adapter *padapter, struct sta_info *psta)
 {
 	if (psta)
 		set_sta_rate(padapter, psta);
@@ -3097,18 +3097,18 @@ exit:
 
 }
 
-void power_saving_wk_hdl(_adapter *padapter)
+static void power_saving_wk_hdl(_adapter *padapter)
 {
 	rtw_ps_processor(padapter);
 }
 
 /* add for CONFIG_IEEE80211W, none 11w can use it */
-void reset_securitypriv_hdl(_adapter *padapter)
+static void reset_securitypriv_hdl(_adapter *padapter)
 {
 	rtw_reset_securitypriv(padapter);
 }
 
-void free_assoc_resources_hdl(_adapter *padapter)
+static void free_assoc_resources_hdl(_adapter *padapter)
 {
 	rtw_free_assoc_resources(padapter, 1);
 }
@@ -3679,7 +3679,7 @@ struct btinfo {
 	u8 rsvd_7;
 };
 
-void btinfo_evt_dump(void *sel, void *buf)
+static void btinfo_evt_dump(void *sel, void *buf)
 {
 	struct btinfo *info = (struct btinfo *)buf;
 
@@ -3928,7 +3928,7 @@ inline u8 rtw_customer_str_write_cmd(_adapter *adapter, const u8 *cstr)
 }
 #endif /* CONFIG_RTW_CUSTOMER_STR */
 
-u8 rtw_c2h_wk_cmd(PADAPTER padapter, u8 *pbuf, u16 length, u8 type)
+static u8 rtw_c2h_wk_cmd(PADAPTER padapter, u8 *pbuf, u16 length, u8 type)
 {
 	struct cmd_obj *ph2c;
 	struct drvextra_cmd_parm *pdrvextra_cmd_parm;
@@ -4046,7 +4046,7 @@ exit:
 }
 #endif /* CONFIG_FW_C2H_REG */
 
-u8 session_tracker_cmd(_adapter *adapter, u8 cmd, struct sta_info *sta, u8 *local_naddr, u8 *local_port, u8 *remote_naddr, u8 *remote_port)
+static u8 session_tracker_cmd(_adapter *adapter, u8 cmd, struct sta_info *sta, u8 *local_naddr, u8 *local_port, u8 *remote_naddr, u8 *remote_port)
 {
 	struct cmd_priv	*cmdpriv = &adapter->cmdpriv;
 	struct cmd_obj *cmdobj;
@@ -4112,7 +4112,7 @@ inline u8 session_tracker_del_cmd(_adapter *adapter, struct sta_info *sta, u8 *l
 	return session_tracker_cmd(adapter, ST_CMD_DEL, sta, local_naddr, local_port, remote_naddr, remote_port);
 }
 
-void session_tracker_chk_for_sta(_adapter *adapter, struct sta_info *sta)
+static void session_tracker_chk_for_sta(_adapter *adapter, struct sta_info *sta)
 {
 	struct st_ctl_t *st_ctl = &sta->st_ctl;
 	int i;
@@ -4166,11 +4166,11 @@ void session_tracker_chk_for_sta(_adapter *adapter, struct sta_info *sta)
 			RTW_INFO(FUNC_ADPT_FMT" local:%u, remote:%u, rtsp:%u, %u, %u\n", FUNC_ADPT_ARG(adapter)
 				, ntohs(st->local_port), ntohs(st->remote_port), adapter->wfd_info.rtsp_ctrlport, adapter->wfd_info.tdls_rtsp_ctrlport
 				, adapter->wfd_info.peer_rtsp_ctrlport);
-		if (ntohs(st->local_port) == adapter->wfd_info.rtsp_ctrlport)
+		if (ntohs((__be16)st->local_port) == adapter->wfd_info.rtsp_ctrlport)
 			op_wfd_mode |= MIRACAST_SINK;
-		if (ntohs(st->local_port) == adapter->wfd_info.tdls_rtsp_ctrlport)
+		if (ntohs((__be16)st->local_port) == adapter->wfd_info.tdls_rtsp_ctrlport)
 			op_wfd_mode |= MIRACAST_SINK;
-		if (ntohs(st->remote_port) == adapter->wfd_info.peer_rtsp_ctrlport)
+		if (ntohs((__be16)st->remote_port) == adapter->wfd_info.peer_rtsp_ctrlport)
 			op_wfd_mode |= MIRACAST_SOURCE;
 		#endif
 	}
@@ -4194,7 +4194,7 @@ exit:
 	return;
 }
 
-void session_tracker_chk_for_adapter(_adapter *adapter)
+static void session_tracker_chk_for_adapter(_adapter *adapter)
 {
 	struct sta_priv *stapriv = &adapter->stapriv;
 	struct sta_info *sta;
@@ -4226,7 +4226,7 @@ void session_tracker_chk_for_adapter(_adapter *adapter)
 #endif
 }
 
-void session_tracker_cmd_hdl(_adapter *adapter, struct st_cmd_parm *parm)
+static void session_tracker_cmd_hdl(_adapter *adapter, struct st_cmd_parm *parm)
 {
 	u8 cmd = parm->cmd;
 	struct sta_info *sta = parm->sta;

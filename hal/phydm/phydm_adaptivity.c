@@ -240,7 +240,7 @@ Phydm_SetEDCCAThreshold(
 
 }
 
-VOID
+static VOID
 Phydm_SetLNA(
 	IN	PVOID				pDM_VOID,
 	IN	PhyDM_set_LNA	type
@@ -570,7 +570,7 @@ Phydm_SearchPwdBLowerBound(
 	Phydm_SetEDCCAThreshold(pDM_Odm, 0x7f, 0x7f);				/*resume to no link state*/
 }
 
-BOOLEAN
+static BOOLEAN
 phydm_reSearchCondition(
 	IN	PVOID				pDM_VOID
 )

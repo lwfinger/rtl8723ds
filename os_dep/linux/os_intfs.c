@@ -88,10 +88,10 @@ module_param(rtw_usb_rxagg_mode, int, 0644);
 #ifdef RTW_LOG_LEVEL
 	uint rtw_drv_log_level = (uint)RTW_LOG_LEVEL; /* from Makefile */
 #else
-	uint rtw_drv_log_level = _DRV_INFO_;
+	uint rtw_drv_log_level = _DRV_ERR_;
 #endif
 module_param(rtw_drv_log_level, uint, 0644);
-MODULE_PARM_DESC(rtw_drv_log_level, "set log level when insert driver module, default log level is _DRV_INFO_ = 4");
+MODULE_PARM_DESC(rtw_drv_log_level, "set log level when insert driver module, default log level is _DRV_INFO_ = 2");
 
 int rtw_radio_enable = 1;
 int rtw_long_retry_lmt = 7;

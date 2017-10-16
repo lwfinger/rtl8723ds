@@ -1473,7 +1473,7 @@ enum ieee80211_state {
 #define IP_FMT "%d.%d.%d.%d"
 #define IP_ARG(x) ((u8 *)(x))[0], ((u8 *)(x))[1], ((u8 *)(x))[2], ((u8 *)(x))[3]
 #define PORT_FMT "%u"
-#define PORT_ARG(x) ntohs(*((u16 *)(x)))
+#define PORT_ARG(x) ntohs(*((__be16 *)(x)))
 
 #ifdef PLATFORM_FREEBSD /* Baron change func to macro */
 #define is_multicast_mac_addr(Addr) ((((Addr[0]) & 0x01) == 0x01) && ((Addr[0]) != 0xff))
