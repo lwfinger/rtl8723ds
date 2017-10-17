@@ -4431,9 +4431,6 @@ static void halbtc8723d2ant_psd_showdata(IN struct btc_coexist *btcoexist)
 
 }
 
-#ifdef PLATFORM_WINDOWS
-#pragma optimize("", off)
-#endif
 static void halbtc8723d2ant_psd_maxholddata(IN struct btc_coexist *btcoexist,
 				     IN u32 gen_count)
 {
@@ -4466,10 +4463,6 @@ static void halbtc8723d2ant_psd_maxholddata(IN struct btc_coexist *btcoexist,
 
 }
 
-
-#ifdef PLATFORM_WINDOWS
-#pragma optimize("", off)
-#endif
 static u32 halbtc8723d2ant_psd_getdata(IN struct btc_coexist *btcoexist, IN u32 point)
 {
 	/* reg 0x808[9:0]: FFT data x */
@@ -4501,9 +4494,6 @@ static u32 halbtc8723d2ant_psd_getdata(IN struct btc_coexist *btcoexist, IN u32 
 	return psd_report;
 }
 
-#ifdef PLATFORM_WINDOWS
-#pragma optimize("", off)
-#endif
 static boolean halbtc8723d2ant_psd_sweep_point(IN struct btc_coexist *btcoexist,
 		IN u32 cent_freq, IN s32 offset, IN u32 span, IN u32 points,
 					IN u32 avgnum, IN u32 loopcnt)
@@ -4833,9 +4823,6 @@ static boolean halbtc8723d2ant_psd_sweep_point(IN struct btc_coexist *btcoexist,
 
 }
 
-#ifdef PLATFORM_WINDOWS
-#pragma optimize("", off)
-#endif
 static boolean halbtc8723d2ant_psd_antenna_detection(IN struct btc_coexist
 		*btcoexist)
 {
@@ -5216,9 +5203,6 @@ static boolean halbtc8723d2ant_psd_antenna_detection(IN struct btc_coexist
 
 }
 
-#ifdef PLATFORM_WINDOWS
-#pragma optimize("", off)
-#endif
 static boolean halbtc8723d2ant_psd_antenna_detection_check(IN struct btc_coexist
 		*btcoexist)
 {
@@ -6664,9 +6648,6 @@ void ex_halbtc8723d2ant_set_antenna_notify(IN struct btc_coexist *btcoexist,
 	}
 }
 
-#ifdef PLATFORM_WINDOWS
-#pragma optimize("", off)
-#endif
 void ex_halbtc8723d2ant_antenna_detection(IN struct btc_coexist *btcoexist,
 		IN u32 cent_freq, IN u32 offset, IN u32 span, IN u32 seconds)
 {
