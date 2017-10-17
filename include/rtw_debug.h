@@ -63,10 +63,8 @@ enum {
 #undef _dbgdump
 #undef _seqdump
 
-#if defined PLATFORM_LINUX
-	#define _dbgdump printk
-	#define _seqdump seq_printf
-#endif
+#define _dbgdump printk
+#define _seqdump seq_printf
 
 #ifdef CONFIG_RTW_DEBUG
 

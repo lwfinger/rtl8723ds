@@ -390,15 +390,12 @@ struct recv_priv {
 	ATOMIC_T	rx_pending_cnt;
 
 #ifdef CONFIG_USB_INTERRUPT_IN_PIPE
-#ifdef PLATFORM_LINUX
 	PURB	int_in_urb;
-#endif
 
 	u8	*int_in_buf;
 #endif /* CONFIG_USB_INTERRUPT_IN_PIPE */
 
 #endif
-#if defined(PLATFORM_LINUX)
 	struct tasklet_struct irq_prepare_beacon_tasklet;
 	struct tasklet_struct recv_tasklet;
 	struct sk_buff_head free_recv_skb_queue;
@@ -410,8 +407,6 @@ struct recv_priv {
 	struct task rx_indicate_tasklet;
 	struct ifqueue rx_indicate_queue;
 #endif /* CONFIG_RX_INDICATE_QUEUE */
-
-#endif /* defined(PLATFORM_LINUX) */
 
 	u8 *pallocated_recv_buf;
 	u8 *precv_buf;    /* 4 alignment */
@@ -500,20 +495,13 @@ struct recv_buf {
 
 #ifdef CONFIG_USB_HCI
 
-#if defined(PLATFORM_LINUX)
 	PURB	purb;
 	dma_addr_t dma_transfer_addr;	/* (in) dma addr for transfer_buffer */
 	u32 alloc_sz;
-#endif
-
 	u8  irp_pending;
 	int  transfer_len;
-
 #endif
-
-#ifdef PLATFORM_LINUX
 	_pkt	*pskb;
-#endif
 };
 
 

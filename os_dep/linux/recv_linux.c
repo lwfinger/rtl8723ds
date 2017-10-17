@@ -113,9 +113,7 @@ int rtw_os_alloc_recvframe(_adapter *padapter, union recv_frame *precvframe, u8 
 			/* The case of can't allocate skb is serious and may never be recovered,
 			 once bDriverStopped is enable, this task should be stopped.*/
 			if (!rtw_is_drv_stopped(secondary_padapter))
-#ifdef PLATFORM_LINUX
 				tasklet_schedule(&precvpriv->recv_tasklet);
-#endif
 			return ret;
 		}
 

@@ -71,9 +71,7 @@ static void rtl8723ds_recv_tasklet(void *priv)
 
 				/* The case of can't allocate recvframe should be temporary, */
 				/* schedule again and hope recvframe is available next time. */
-#ifdef PLATFORM_LINUX
 				tasklet_schedule(&precvpriv->recv_tasklet);
-#endif
 				return;
 			}
 
@@ -207,9 +205,7 @@ static void rtl8723ds_recv_tasklet(void *priv)
 
 				/* The case of can't allocate recvframe should be temporary, */
 				/* schedule again and hope recvframe is available next time. */
-#ifdef PLATFORM_LINUX
 				tasklet_schedule(&precvpriv->recv_tasklet);
-#endif
 				return;
 			}
 
@@ -283,9 +279,7 @@ static void rtl8723ds_recv_tasklet(void *priv)
 					/* The case of can't allocate skb is serious and may never be recovered, */
 					/* once bDriverStopped is enable, this task should be stopped. */
 					if (!rtw_is_drv_stopped(padapter)) {
-#ifdef PLATFORM_LINUX
 						tasklet_schedule(&precvpriv->recv_tasklet);
-#endif
 					}
 
 					return;
@@ -426,11 +420,9 @@ s32 rtl8723ds_init_recv_priv(PADAPTER padapter)
 		goto initbuferror;
 
 	/* 3 2. init tasklet */
-#ifdef PLATFORM_LINUX
 	tasklet_init(&precvpriv->recv_tasklet,
 		     (void(*)(unsigned long))rtl8723ds_recv_tasklet,
 		     (unsigned long)padapter);
-#endif
 
 	goto exit;
 
@@ -474,9 +466,7 @@ void rtl8723ds_free_recv_priv(PADAPTER padapter)
 	precvpriv = &padapter->recvpriv;
 
 	/* 3 1. kill tasklet */
-#ifdef PLATFORM_LINUX
 	tasklet_kill(&precvpriv->recv_tasklet);
-#endif
 
 	/* 3 2. free all recv buffers */
 	precvbuf = (struct recv_buf *)precvpriv->precv_buf;

@@ -4966,9 +4966,7 @@ void rtw_sctx_init(struct submit_ctx *sctx, int timeout_ms)
 {
 	sctx->timeout_ms = timeout_ms;
 	sctx->submit_time = rtw_get_current_time();
-#ifdef PLATFORM_LINUX /* TODO: add condition wating interface for other os */
 	init_completion(&sctx->done);
-#endif
 	sctx->status = RTW_SCTX_SUBMITTED;
 }
 
@@ -4978,7 +4976,6 @@ int rtw_sctx_wait(struct submit_ctx *sctx, const char *msg)
 	unsigned long expire;
 	int status = 0;
 
-#ifdef PLATFORM_LINUX
 	expire = sctx->timeout_ms ? msecs_to_jiffies(sctx->timeout_ms) : MAX_SCHEDULE_TIMEOUT;
 	if (!wait_for_completion_timeout(&sctx->done, expire)) {
 		/* timeout, do something?? */
@@ -4986,7 +4983,6 @@ int rtw_sctx_wait(struct submit_ctx *sctx, const char *msg)
 		RTW_INFO("%s timeout: %s\n", __func__, msg);
 	} else
 		status = sctx->status;
-#endif
 
 	if (status == RTW_SCTX_DONE_SUCCESS)
 		ret = _SUCCESS;
@@ -5015,9 +5011,7 @@ void rtw_sctx_done_err(struct submit_ctx **sctx, int status)
 		if (rtw_sctx_chk_waring_status(status))
 			RTW_INFO("%s status:%d\n", __func__, status);
 		(*sctx)->status = status;
-#ifdef PLATFORM_LINUX
 		complete(&((*sctx)->done));
-#endif
 		*sctx = NULL;
 	}
 }

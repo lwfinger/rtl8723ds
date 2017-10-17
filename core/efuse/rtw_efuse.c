@@ -2346,7 +2346,6 @@ u8 mac_hidden_wl_func_to_hal_wl_func(u8 func)
 	return wl_func;
 }
 
-#ifdef PLATFORM_LINUX
 #ifdef CONFIG_ADAPTOR_INFO_CACHING_FILE
 /* #include <rtw_eeprom.h> */
 
@@ -2608,5 +2607,3 @@ exit:
 	return ret;
 }
 #endif /* CONFIG_EFUSE_CONFIG_FILE */
-
-#endif /* PLATFORM_LINUX */

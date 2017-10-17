@@ -474,9 +474,7 @@ struct  submit_ctx {
 	u32 submit_time; /* */
 	u32 timeout_ms; /* <0: not synchronous, 0: wait forever, >0: up to ms waiting */
 	int status; /* status for operation */
-#ifdef PLATFORM_LINUX
 	struct completion done;
-#endif
 };
 
 enum {
@@ -529,10 +527,8 @@ struct xmit_buf {
 	u8 bulkout_id; /* for halmac */
 #endif /* RTW_HALMAC */
 
-#if defined(PLATFORM_LINUX)
 	PURB	pxmit_urb[8];
 	dma_addr_t dma_transfer_addr;	/* (in) dma addr for transfer_buffer */
-#endif
 
 	u8 bpending[8];
 
@@ -715,9 +711,7 @@ struct	xmit_priv	{
 	_sema	tx_retevt;/* all tx return event; */
 	u8		txirp_cnt;
 
-#ifdef PLATFORM_LINUX
 	struct tasklet_struct xmit_tasklet;
-#endif
 	/* per AC pending irp */
 	int beq_cnt;
 	int bkq_cnt;
@@ -731,16 +725,12 @@ struct	xmit_priv	{
 	struct rtw_tx_ring	tx_ring[PCI_MAX_TX_QUEUE_COUNT];
 	int	txringcount[PCI_MAX_TX_QUEUE_COUNT];
 	u8 	beaconDMAing;		/* flag of indicating beacon is transmiting to HW by DMA */
-#ifdef PLATFORM_LINUX
 	struct tasklet_struct xmit_tasklet;
-#endif
 #endif
 
 #if defined(CONFIG_SDIO_HCI) || defined(CONFIG_GSPI_HCI)
 #ifdef CONFIG_SDIO_TX_TASKLET
-#ifdef PLATFORM_LINUX
 	struct tasklet_struct xmit_tasklet;
-#endif /* PLATFORM_LINUX */
 #else
 	_thread_hdl_	SdioXmitThread;
 	_sema		SdioXmitSema;
