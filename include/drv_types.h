@@ -39,14 +39,6 @@
 	#include <net/arp.h>
 #endif
 
-#ifdef PLATFORM_OS_XP
-	#include <drv_types_xp.h>
-#endif
-
-#ifdef PLATFORM_OS_CE
-	#include <drv_types_ce.h>
-#endif
-
 #ifdef PLATFORM_LINUX
 	#include <drv_types_linux.h>
 #endif
@@ -981,11 +973,6 @@ struct dvobj_priv {
 	struct usb_device *pusbdev;
 #endif/* PLATFORM_LINUX */
 
-#ifdef PLATFORM_FREEBSD
-	struct usb_interface *pusbintf;
-	struct usb_device *pusbdev;
-#endif/* PLATFORM_FREEBSD */
-
 #endif/* CONFIG_USB_HCI */
 
 	/*-------- below is for PCIE INTERFACE --------*/
@@ -1323,11 +1310,6 @@ struct _ADAPTER {
 
 #endif /* PLATFORM_LINUX */
 
-#ifdef PLATFORM_FREEBSD
-	_nic_hdl pifp;
-	int bup;
-	_lock glock;
-#endif /* PLATFORM_FREEBSD */
 	u8 mac_addr[ETH_ALEN];
 	int net_closed;
 
