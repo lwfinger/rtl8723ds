@@ -9238,17 +9238,11 @@ static int rtw_mp_efuse_get(struct net_device *dev,
 #ifdef CONFIG_USB_HCI
 		addr = EEPROM_VID_88EU;
 #endif
-#ifdef CONFIG_PCI_HCI
-		addr = EEPROM_VID_88EE;
-#endif
 #endif /* CONFIG_RTL8188E */
 
 #ifdef CONFIG_RTL8192E
 #ifdef CONFIG_USB_HCI
 		addr = EEPROM_VID_8192EU;
-#endif
-#ifdef CONFIG_PCI_HCI
-		addr = EEPROM_VID_8192EE;
 #endif
 #endif /* CONFIG_RTL8192E */
 #ifdef CONFIG_RTL8723B
@@ -9847,17 +9841,11 @@ static int rtw_mp_efuse_set(struct net_device *dev,
 #ifdef CONFIG_USB_HCI
 		addr = EEPROM_VID_88EU;
 #endif
-#ifdef CONFIG_PCI_HCI
-		addr = EEPROM_VID_88EE;
-#endif
 #endif /* CONFIG_RTL8188E */
 
 #ifdef CONFIG_RTL8192E
 #ifdef CONFIG_USB_HCI
 		addr = EEPROM_VID_8192EU;
-#endif
-#ifdef CONFIG_PCI_HCI
-		addr = EEPROM_VID_8192EE;
 #endif
 #endif /* CONFIG_RTL8188E */
 
@@ -12012,16 +12000,6 @@ static struct xmit_frame *createloopbackpkt(PADAPTER padapter, u32 size)
 	desc->txdw5 = cpu_to_le32(desc->txdw5);
 	desc->txdw6 = cpu_to_le32(desc->txdw6);
 	desc->txdw7 = cpu_to_le32(desc->txdw7);
-#ifdef CONFIG_PCI_HCI
-	desc->txdw8 = cpu_to_le32(desc->txdw8);
-	desc->txdw9 = cpu_to_le32(desc->txdw9);
-	desc->txdw10 = cpu_to_le32(desc->txdw10);
-	desc->txdw11 = cpu_to_le32(desc->txdw11);
-	desc->txdw12 = cpu_to_le32(desc->txdw12);
-	desc->txdw13 = cpu_to_le32(desc->txdw13);
-	desc->txdw14 = cpu_to_le32(desc->txdw14);
-	desc->txdw15 = cpu_to_le32(desc->txdw15);
-#endif
 
 	cal_txdesc_chksum(desc);
 

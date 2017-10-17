@@ -2213,11 +2213,6 @@ const struct rtw_proc_hdl adapter_proc_hdls[] = {
 	RTW_PROC_HDL_SSEQ("int_logs", proc_get_int_logs, NULL),
 #endif
 
-#ifdef CONFIG_PCI_HCI
-	RTW_PROC_HDL_SSEQ("rx_ring", proc_get_rx_ring, NULL),
-	RTW_PROC_HDL_SSEQ("tx_ring", proc_get_tx_ring, NULL),
-#endif
-
 #ifdef CONFIG_WOWLAN
 	RTW_PROC_HDL_SSEQ("wow_pattern_info", proc_get_pattern_info, proc_set_pattern_info),
 	RTW_PROC_HDL_SSEQ("wowlan_last_wake_reason", proc_get_wakeup_reason, NULL),

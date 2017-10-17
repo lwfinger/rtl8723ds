@@ -44,13 +44,6 @@
 		#endif
 	#endif/* !MAX_RECVBUF_SZ*/
 
-#elif defined(CONFIG_PCI_HCI)
-	/*#ifndef CONFIG_MINIMAL_MEMORY_USAGE
-	#define MAX_RECVBUF_SZ (9100)
-	#else*/
-	#define MAX_RECVBUF_SZ (4096) /* about 4K */
-	/*#endif*/
-
 #elif defined(CONFIG_SDIO_HCI) || defined(CONFIG_GSPI_HCI)
 
 	#define MAX_RECVBUF_SZ	HALMAC_RX_FIFO_SIZE_8821C

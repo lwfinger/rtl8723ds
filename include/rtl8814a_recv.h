@@ -39,14 +39,6 @@
 		#endif
 	#endif /* !MAX_RECVBUF_SZ */
 
-#elif defined(CONFIG_PCI_HCI)
-	/* #ifndef CONFIG_MINIMAL_MEMORY_USAGE */
-	/*	#define MAX_RECVBUF_SZ (9100) */
-	/* #else */
-	#define MAX_RECVBUF_SZ (4000) /* about 4K
-	* #endif */
-
-
 #elif defined(CONFIG_SDIO_HCI)
 	#if 0
 		/* temp solution */
@@ -167,11 +159,6 @@
 #ifdef CONFIG_USB_HCI
 	s32 rtl8814au_init_recv_priv(PADAPTER padapter);
 	void rtl8814au_free_recv_priv(PADAPTER padapter);
-#endif
-
-#ifdef CONFIG_PCI_HCI
-	s32 rtl8814ae_init_recv_priv(PADAPTER padapter);
-	void rtl8814ae_free_recv_priv(PADAPTER padapter);
 #endif
 
 #if 0
