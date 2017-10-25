@@ -390,42 +390,42 @@ enum WIFI_REG_DOMAIN {
 	} while (0)
 
 #define SetSeqNum(pbuf, num) \
-	do {    \
-		*(unsigned short *)((SIZE_PTR)(pbuf) + 22) = \
-			((*(unsigned short *)((SIZE_PTR)(pbuf) + 22)) & le16_to_cpu((unsigned short)~0xfff0)) | \
-			le16_to_cpu((unsigned short)(0xfff0 & (num << 4))); \
-	} while (0)
+        do {    \
+                *(__le16 *)((size_t)(pbuf) + 22) = \
+                        ((*(__le16 *)((size_t)(pbuf) + 22)) & cpu_to_le16((unsigned short)0x000f)) | \
+                        cpu_to_le16((unsigned short)(0xfff0 & (num << 4))); \
+        } while (0)
 
 #define SetDuration(pbuf, dur) \
 	do {    \
-		*(unsigned short *)((SIZE_PTR)(pbuf) + 2) = cpu_to_le16(0xffff & (dur)); \
+		*(__le16 *)((SIZE_PTR)(pbuf) + 2) = cpu_to_le16(0xffff & (dur)); \
 	} while (0)
 
 
 #define SetPriority(pbuf, tid)	\
 	do	{	\
-		*(unsigned short *)(pbuf) |= cpu_to_le16(tid & 0xf); \
+		*(__le16 *)(pbuf) |= cpu_to_le16(tid & 0xf); \
 	} while (0)
 
 #define GetPriority(pbuf)	((le16_to_cpu(*(__le16 *)(pbuf))) & 0xf)
 
 #define SetEOSP(pbuf, eosp)	\
 	do	{	\
-		*(unsigned short *)(pbuf) |= cpu_to_le16((eosp & 1) << 4); \
+		*(__le16 *)(pbuf) |= cpu_to_le16((eosp & 1) << 4); \
 	} while (0)
 
 #define SetAckpolicy(pbuf, ack)	\
 	do	{	\
-		*(unsigned short *)(pbuf) |= cpu_to_le16((ack & 3) << 5); \
+		*(__le16 *)(pbuf) |= cpu_to_le16((ack & 3) << 5); \
 	} while (0)
 
-#define GetAckpolicy(pbuf) (((le16_to_cpu(*(unsigned short *)pbuf)) >> 5) & 0x3)
+#define GetAckpolicy(pbuf) (((le16_to_cpu(*(__le16 *)pbuf)) >> 5) & 0x3)
 
-#define GetAMsdu(pbuf) (((le16_to_cpu(*(unsigned short *)pbuf)) >> 7) & 0x1)
+#define GetAMsdu(pbuf) (((le16_to_cpu(*(__le16 *)pbuf)) >> 7) & 0x1)
 
 #define SetAMsdu(pbuf, amsdu)	\
 	do	{	\
-		*(unsigned short *)(pbuf) |= cpu_to_le16((amsdu & 1) << 7); \
+		*(__le16 *)(pbuf) |= cpu_to_le16((amsdu & 1) << 7); \
 	} while (0)
 
 #define GetAid(pbuf)	(cpu_to_le16(*(unsigned short *)((SIZE_PTR)(pbuf) + 2)) & 0x3fff)
