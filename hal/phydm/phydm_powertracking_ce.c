@@ -481,7 +481,7 @@ odm_TXPowerTrackingInit(
 	odm_TXPowerTrackingThermalMeterInit(pDM_Odm);
 }	
 
-u1Byte 
+static u1Byte 
 getSwingIndex(
 	IN	PVOID	pDM_VOID 
 	)

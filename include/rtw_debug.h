@@ -20,6 +20,8 @@
 #ifndef __RTW_DEBUG_H__
 #define __RTW_DEBUG_H__
 
+#include <linux/trace_seq.h>
+
 /* driver log level*/
 enum {
 	_DRV_NONE_ = 0,
@@ -257,7 +259,7 @@ extern uint rtw_drv_log_level;
 		if (sel == RTW_DBGDUMP)\
 			RTW_PRINT(fmt, ##arg); \
 		else {\
-			_seqdump(sel, fmt, ##arg) /*rtw_warn_on(1)*/; \
+			_seqdump((struct seq_file *)sel, fmt, ##arg) /*rtw_warn_on(1)*/; \
 		} \
 	} while (0)
 

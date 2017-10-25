@@ -23,7 +23,7 @@
 #include <hal_data.h>
 
 #ifdef CONFIG_RTW_DEBUG
-const char *rtw_log_level_str[] = {
+static const char *rtw_log_level_str[] = {
 	"_DRV_NONE_ = 0",
 	"_DRV_ALWAYS_ = 1",
 	"_DRV_ERR_ = 2",
@@ -358,7 +358,7 @@ void rtw_sink_rtp_seq_dbg(_adapter *adapter, _pkt *pkt)
 {
 	struct recv_priv *precvpriv = &(adapter->recvpriv);
 	if (precvpriv->sink_udpport > 0) {
-		if (*((u16 *)((pkt->data) + 0x24)) == cpu_to_be16(precvpriv->sink_udpport)) {
+		if (*((__be16 *)((pkt->data) + 0x24)) == cpu_to_be16(precvpriv->sink_udpport)) {
 			precvpriv->pre_rtp_rxseq = precvpriv->cur_rtp_rxseq;
 			precvpriv->cur_rtp_rxseq = be16_to_cpu(*((u16 *)((pkt->data) + 0x2C)));
 			if (precvpriv->pre_rtp_rxseq + 1 != precvpriv->cur_rtp_rxseq)

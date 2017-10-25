@@ -147,9 +147,9 @@ struct st_cmd_parm {
 	u8 cmd;
 	struct sta_info *sta;
 	u32 local_naddr; /* TODO: IPV6 */
-	u16 local_port;
+	__be16 local_port;
 	u32 remote_naddr; /* TODO: IPV6 */
-	u16 remote_port;
+	__be16 remote_port;
 };
 
 typedef bool (*st_match_rule)(_adapter *adapter, u8 *local_naddr, u8 *local_port, u8 *remote_naddr, u8 *remote_port);

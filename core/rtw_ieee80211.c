@@ -442,20 +442,20 @@ int rtw_generate_ie(struct registry_priv *pregistrypriv)
 	ie += sz;
 
 	/* beacon interval : 2bytes */
-	*(u16 *)ie = cpu_to_le16((u16)pdev_network->Configuration.BeaconPeriod); /* BCN_INTERVAL; */
+	*(__le16 *)ie = cpu_to_le16((u16)pdev_network->Configuration.BeaconPeriod); /* BCN_INTERVAL; */
 	sz += 2;
 	ie += 2;
 
 	/* capability info */
 	*(u16 *)ie = 0;
 
-	*(u16 *)ie |= cpu_to_le16(cap_IBSS);
+	*(__le16 *)ie |= cpu_to_le16(cap_IBSS);
 
 	if (pregistrypriv->preamble == PREAMBLE_SHORT)
-		*(u16 *)ie |= cpu_to_le16(cap_ShortPremble);
+		*(__le16 *)ie |= cpu_to_le16(cap_ShortPremble);
 
 	if (pdev_network->Privacy)
-		*(u16 *)ie |= cpu_to_le16(cap_Privacy);
+		*(__le16 *)ie |= cpu_to_le16(cap_Privacy);
 
 	sz += 2;
 	ie += 2;
@@ -1447,7 +1447,7 @@ void dump_ht_cap_ie_content(void *sel, u8 *buf, u32 buf_len)
 		      , HT_SUP_MCS_SET_ARG(HT_CAP_ELE_SUP_MCS_SET(buf)));
 }
 
-void dump_ht_cap_ie(void *sel, u8 *ie, u32 ie_len)
+static void dump_ht_cap_ie(void *sel, u8 *ie, u32 ie_len)
 {
 	u8 *pos = (u8 *)ie;
 	u16 id;
@@ -2487,7 +2487,7 @@ int ieee80211_get_hdrlen(u16 fc)
 	return hdrlen;
 }
 
-int rtw_get_cipher_info(struct wlan_network *pnetwork)
+static int rtw_get_cipher_info(struct wlan_network *pnetwork)
 {
 	u32 wpa_ielen;
 	unsigned char *pbuf;

@@ -77,7 +77,7 @@ PHYDM_InitDebugSetting(
 	pDM_Odm->pre_c2h_seq = 0;
 }
 
-VOID
+static VOID
 phydm_BB_RxHang_Info(
 	IN		PVOID			pDM_VOID,
 	IN		u4Byte			*_used,
@@ -254,7 +254,7 @@ phydm_BB_RxHang_Info(
 
 }
 
-VOID
+static VOID
 phydm_BB_Debug_Info(
 	IN		PVOID			pDM_VOID,
 	IN		u4Byte			*_used,
@@ -1245,7 +1245,7 @@ phydm_api_trx_mode(
 }
 #endif
 
-VOID
+static VOID
 phydm_get_per_path_txagc(
 	IN		PVOID			pDM_VOID,
 	IN		u1Byte			path,
@@ -1296,7 +1296,7 @@ phydm_get_per_path_txagc(
 }
 
 
-VOID
+static VOID
 phydm_get_txagc(
 	IN		PVOID			pDM_VOID,
 	IN		u4Byte			*_used,
@@ -1326,7 +1326,7 @@ phydm_get_txagc(
 
 }
 
-VOID
+static VOID
 phydm_set_txagc(
 	IN		PVOID			pDM_VOID,
 	IN		u4Byte			*const dm_value,
@@ -1380,7 +1380,7 @@ phydm_set_txagc(
 #endif
 }
 
-VOID
+static VOID
 phydm_debug_trace(
 	IN		PVOID		pDM_VOID,
 	IN		u4Byte		*const dm_value,
@@ -1445,7 +1445,7 @@ phydm_debug_trace(
 	PHYDM_SNPRINTF((output + used, out_len - used, "%s\n", "================================"));
 }
 
-VOID
+static VOID
 phydm_fw_debug_trace(
 	IN		PVOID		pDM_VOID,
 	IN		u4Byte		*const dm_value,
@@ -1497,7 +1497,7 @@ phydm_fw_debug_trace(
 	}
 }
 
-VOID
+static VOID
 phydm_DumpBbReg(
 	IN		PVOID			pDM_VOID,
 	IN		u4Byte			*_used,
@@ -1542,7 +1542,7 @@ phydm_DumpBbReg(
 	}
 }
 
-VOID
+static VOID
 phydm_DumpAllReg(
 	IN		PVOID			pDM_VOID,
 	IN		u4Byte			*_used,
@@ -1591,7 +1591,7 @@ phydm_DumpAllReg(
 	}
 }
 
-VOID
+static VOID
 phydm_EnableBigJump(
 	IN	PDM_ODM_T	pDM_Odm,
 	IN	BOOLEAN		state
@@ -1693,7 +1693,7 @@ enum PHYDM_CMD_ID {
 	PHYDM_ANT_SWITCH
 };
 
-struct _PHYDM_COMMAND phy_dm_ary[] = {
+static struct _PHYDM_COMMAND phy_dm_ary[] = {
 	{"-h", PHYDM_HELP},		/*do not move this element to other position*/
 	{"demo", PHYDM_DEMO},	/*do not move this element to other position*/
 	{"ra", PHYDM_RA},
@@ -2969,7 +2969,7 @@ phydm_fw_trace_handler_8051(
 	int i = 0;
 	u1Byte	Extend_c2hSubID = 0, Extend_c2hDbgLen = 0, Extend_c2hDbgSeq = 0;
 	u1Byte	fw_debug_trace[128];
-	pu1Byte	Extend_c2hDbgContent = 0;
+	pu1Byte	Extend_c2hDbgContent = NULL;
 
 	if (CmdLen > 127)
 		return;

@@ -848,7 +848,7 @@ phydm_modify_RA_PCR_threshold(
 	ODM_RT_TRACE(pDM_Odm, ODM_COMP_RA_MASK, ODM_DBG_LOUD, ("Set RA_threshold_offset = (( %s%d ))\n", ((RA_threshold_offset == 0) ? " " : ((RA_offset_direction) ? "+" : "-")), RA_threshold_offset));
 }
 
-VOID
+static VOID
 odm_RSSIMonitorCheckMP(
 	IN	PVOID	pDM_VOID
 )
@@ -1120,7 +1120,7 @@ odm_RSSIMonitorCheckMP(
 
 #if (DM_ODM_SUPPORT_TYPE == ODM_CE)
 /*H2C_RSSI_REPORT*/
-s8 phydm_rssi_report(PDM_ODM_T pDM_Odm, u8 mac_id)
+static s8 phydm_rssi_report(PDM_ODM_T pDM_Odm, u8 mac_id)
 {
 	PADAPTER Adapter = pDM_Odm->Adapter;
 	pRA_T			pRA_Table = &pDM_Odm->DM_RA_Table;
@@ -1233,7 +1233,7 @@ s8 phydm_rssi_report(PDM_ODM_T pDM_Odm, u8 mac_id)
 	return _SUCCESS;
 }
 
-void phydm_ra_rssi_rpt_wk_hdl(PVOID pContext)
+static void phydm_ra_rssi_rpt_wk_hdl(PVOID pContext)
 {
 	PDM_ODM_T	pDM_Odm = (PDM_ODM_T)pContext;
 	int i;
@@ -1262,7 +1262,7 @@ void phydm_ra_rssi_rpt_wk(PVOID pContext)
 }
 #endif
 
-VOID
+static VOID
 odm_RSSIMonitorCheckCE(
 	IN		PVOID		pDM_VOID
 )
@@ -1317,7 +1317,7 @@ odm_RSSIMonitorCheckCE(
 }
 
 
-VOID
+static VOID
 odm_RSSIMonitorCheckAP(
 	IN		PVOID		pDM_VOID
 )
@@ -1582,7 +1582,7 @@ odm_RefreshRateAdaptiveMask(
 
 }
 
-u1Byte
+static u1Byte
 phydm_trans_platform_bw(
 	IN	PVOID		pDM_VOID,
 	IN	u1Byte		BW
@@ -1646,7 +1646,7 @@ phydm_trans_platform_bw(
 
 }
 
-u1Byte
+static u1Byte
 phydm_trans_platform_rf_type(
 	IN	PVOID		pDM_VOID,
 	IN	u1Byte		RfType
@@ -1741,7 +1741,7 @@ phydm_trans_platform_rf_type(
 
 }
 
-u4Byte
+static u4Byte
 phydm_trans_platform_wireless_mode(
 	IN	PVOID		pDM_VOID,
 	IN	u4Byte		wireless_mode
@@ -2486,7 +2486,7 @@ phydm_rate_order_compute(
 
 }
 
-VOID
+static VOID
 phydm_ra_common_info_update(
 	IN	PVOID	pDM_VOID
 	)
@@ -2655,7 +2655,7 @@ odm_Find_RTS_Rate(
 
 }
 
-VOID
+static VOID
 odm_Set_RA_DM_ARFB_by_Noisy(
 	IN	PDM_ODM_T	pDM_Odm
 )
@@ -3045,7 +3045,7 @@ PhyDM_Get_Rate_Bitmap_Ex(
 {
 	PDM_ODM_T		pDM_Odm = (PDM_ODM_T)pDM_VOID;
 	PSTA_INFO_T	pEntry;
-	u8Byte	rate_bitmap = 0;
+	u64	rate_bitmap = 0;
 	u1Byte	WirelessMode;
 
 	pEntry = pDM_Odm->pODM_StaInfo[macid];
@@ -3112,7 +3112,7 @@ PhyDM_Get_Rate_Bitmap_Ex(
 				if (*(pDM_Odm->pBandWidth) == ODM_BW40M)
 					rate_bitmap = 0x0000000ffffff015;
 				else
-					rate_bitmap = 0x0000000ffffff005;
+					rate_bitmap = 0x000000ffffff005;
 			}
 		}
 	}
