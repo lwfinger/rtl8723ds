@@ -25,7 +25,7 @@ extern void indicate_wx_scan_complete_event(_adapter *padapter);
 extern u8 rtw_do_join(_adapter *padapter);
 
 
-sint	_rtw_init_mlme_priv(_adapter *padapter)
+static sint	_rtw_init_mlme_priv(_adapter *padapter)
 {
 	sint	i;
 	u8	*pbuf;
@@ -274,7 +274,7 @@ exit:
 }
 #endif /* defined(CONFIG_WFD) && defined(CONFIG_IOCTL_CFG80211) */
 
-void _rtw_free_mlme_priv(struct mlme_priv *pmlmepriv)
+static void _rtw_free_mlme_priv(struct mlme_priv *pmlmepriv)
 {
 	if (NULL == pmlmepriv) {
 		rtw_warn_on(1);
@@ -292,7 +292,7 @@ exit:
 	return;
 }
 
-sint	_rtw_enqueue_network(_queue *queue, struct wlan_network *pnetwork)
+static sint	_rtw_enqueue_network(_queue *queue, struct wlan_network *pnetwork)
 {
 	_irqL irqL;
 
@@ -553,7 +553,7 @@ u8 *rtw_get_capability_from_ie(u8 *ie)
 
 u16 rtw_get_capability(WLAN_BSSID_EX *bss)
 {
-	u16	val;
+	__le16	val;
 
 	_rtw_memcpy((u8 *)&val, rtw_get_capability_from_ie(bss->IEs), 2);
 
@@ -1405,7 +1405,7 @@ static void free_scanqueue(struct	mlme_priv *pmlmepriv)
 
 }
 
-void rtw_reset_rx_info(struct debug_priv *pdbgpriv)
+static void rtw_reset_rx_info(struct debug_priv *pdbgpriv)
 {
 	pdbgpriv->dbg_rx_ampdu_drop_count = 0;
 	pdbgpriv->dbg_rx_ampdu_forced_indicate_count = 0;
@@ -1506,8 +1506,6 @@ void rtw_free_assoc_resources(_adapter *adapter, int lock_scanned_queue)
 	adapter->securitypriv.key_mask = 0;
 
 	rtw_reset_rx_info(pdbgpriv);
-
-
 }
 
 /*
@@ -1517,8 +1515,6 @@ void rtw_indicate_connect(_adapter *padapter)
 {
 	struct mlme_priv	*pmlmepriv = &padapter->mlmepriv;
 	struct xmit_priv	*pxmitpriv = &padapter->xmitpriv;
-
-
 
 	pmlmepriv->to_join = _FALSE;
 
@@ -1970,9 +1966,8 @@ void rtw_joinbss_event_prehandle(_adapter *adapter, u8 *pbuf)
 	the_same_macaddr = _rtw_memcmp(pnetwork->network.MacAddress, cur_network->network.MacAddress, ETH_ALEN);
 
 	pnetwork->network.Length = get_WLAN_BSSID_EX_sz(&pnetwork->network);
-	if (pnetwork->network.Length > sizeof(WLAN_BSSID_EX)) {
-		goto ignore_joinbss_callback;
-	}
+	if (pnetwork->network.Length > sizeof(WLAN_BSSID_EX))
+		return;
 
 	_enter_critical_bh(&pmlmepriv->lock, &irqL);
 
@@ -1995,9 +1990,7 @@ void rtw_joinbss_event_prehandle(_adapter *adapter, u8 *pbuf)
 
 					pcur_sta = rtw_get_stainfo(pstapriv, cur_network->network.MacAddress);
 					if (pcur_sta) {
-						/* _enter_critical_bh(&(pstapriv->sta_hash_lock), &irqL2); */
 						rtw_free_stainfo(adapter,  pcur_sta);
-						/* _exit_critical_bh(&(pstapriv->sta_hash_lock), &irqL2); */
 					}
 
 					ptarget_wlan = rtw_find_network(&pmlmepriv->scanned_queue, pnetwork->network.MacAddress);
@@ -2006,7 +1999,6 @@ void rtw_joinbss_event_prehandle(_adapter *adapter, u8 *pbuf)
 							ptarget_wlan->fixed = _TRUE;
 					}
 				}
-
 			} else {
 				ptarget_wlan = _rtw_find_same_network(&pmlmepriv->scanned_queue, pnetwork);
 				if (check_fwstate(pmlmepriv, WIFI_STATION_STATE) == _TRUE) {
@@ -2043,15 +2035,12 @@ void rtw_joinbss_event_prehandle(_adapter *adapter, u8 *pbuf)
 
 			/* s5. Cancle assoc_timer					 */
 			_cancel_timer(&pmlmepriv->assoc_timer, &timer_cancelled);
-
-
 		} else {
 			_exit_critical_bh(&(pmlmepriv->scanned_queue.lock), &irqL);
 			goto ignore_joinbss_callback;
 		}
 
 		_exit_critical_bh(&(pmlmepriv->scanned_queue.lock), &irqL);
-
 	} else if (pnetwork->join_res == -4) {
 		rtw_reset_securitypriv(adapter);
 		_set_timer(&pmlmepriv->assoc_timer, 1);
@@ -2446,7 +2435,7 @@ err_2:
 }
 #endif
 
-void rtw_sta_mstatus_disc_rpt(_adapter *adapter, u8 mac_id)
+static void rtw_sta_mstatus_disc_rpt(_adapter *adapter, u8 mac_id)
 {
 	struct macid_ctl_t *macid_ctl = &adapter->dvobj->macid_ctl;
 
@@ -3167,7 +3156,7 @@ int rtw_select_roaming_candidate(struct mlme_priv *mlme)
 
 	if (mlme->cur_network_scanned == NULL) {
 		rtw_warn_on(1);
-		goto exit;
+		return ret;
 	}
 
 	_enter_critical_bh(&(mlme->scanned_queue.lock), &irqL);
@@ -4646,9 +4635,9 @@ static bool wfd_st_match_rule(_adapter *adapter, u8 *local_naddr, u8 *local_port
 {
 	struct wifi_display_info *wfdinfo = &adapter->wfd_info;
 
-	if (ntohs(*((u16 *)local_port)) == wfdinfo->rtsp_ctrlport
-	    || ntohs(*((u16 *)local_port)) == wfdinfo->tdls_rtsp_ctrlport
-	    || ntohs(*((u16 *)remote_port)) == wfdinfo->peer_rtsp_ctrlport)
+	if (ntohs(*((__be16 *)local_port)) == wfdinfo->rtsp_ctrlport
+	    || ntohs(*((__be16 *)local_port)) == wfdinfo->tdls_rtsp_ctrlport
+	    || ntohs(*((__be16 *)remote_port)) == wfdinfo->peer_rtsp_ctrlport)
 		return _TRUE;
 	return _FALSE;
 }

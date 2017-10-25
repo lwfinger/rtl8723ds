@@ -56,7 +56,7 @@ enum {
 
 #define RTW_DBG_EXPR(EXPR) do {} while (0)
 
-#define RTW_DBGDUMP 0 /* 'stream' for _dbgdump */
+#define RTW_DBGDUMP NULL /* 'stream' for _dbgdump */
 
 /* don't use these 3 APIs anymore, will be removed later */
 #define RT_TRACE(_Comp, _Level, Fmt) do {} while (0)
@@ -259,7 +259,7 @@ extern uint rtw_drv_log_level;
 		if (sel == RTW_DBGDUMP)\
 			RTW_PRINT(fmt, ##arg); \
 		else {\
-			_seqdump((struct seq_file *)sel, fmt, ##arg) /*rtw_warn_on(1)*/; \
+			_seqdump(sel, fmt, ##arg) /*rtw_warn_on(1)*/; \
 		} \
 	} while (0)
 
