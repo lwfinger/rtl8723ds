@@ -360,7 +360,7 @@ void rtw_sink_rtp_seq_dbg(_adapter *adapter, _pkt *pkt)
 	if (precvpriv->sink_udpport > 0) {
 		if (*((__be16 *)((pkt->data) + 0x24)) == cpu_to_be16(precvpriv->sink_udpport)) {
 			precvpriv->pre_rtp_rxseq = precvpriv->cur_rtp_rxseq;
-			precvpriv->cur_rtp_rxseq = be16_to_cpu(*((u16 *)((pkt->data) + 0x2C)));
+			precvpriv->cur_rtp_rxseq = be16_to_cpu(*((__be16 *)((pkt->data) + 0x2C)));
 			if (precvpriv->pre_rtp_rxseq + 1 != precvpriv->cur_rtp_rxseq)
 				RTW_INFO("%s : RTP Seq num from %d to %d\n", __FUNCTION__, precvpriv->pre_rtp_rxseq, precvpriv->cur_rtp_rxseq);
 		}
@@ -1225,10 +1225,10 @@ int proc_get_survey_info(struct seq_file *m, void *v)
 	_enter_critical_bh(&(pmlmepriv->scanned_queue.lock), &irqL);
 	phead = get_list_head(queue);
 	if (!phead)
-		return 0;
+		goto exit;
 	plist = get_next(phead);
 	if (!plist)
-		return 0;
+		goto exit;
 
 	RTW_PRINT_SEL(m, "%5s  %-17s  %3s  %-3s  %-4s  %-4s  %5s  %32s  %32s\n", "index", "bssid", "ch", "RSSI", "SdBm", "Noise", "age", "flag", "ssid");
 	while (1) {
@@ -1276,6 +1276,7 @@ int proc_get_survey_info(struct seq_file *m, void *v)
 			      pnetwork->network.Ssid.Ssid);
 		plist = get_next(plist);
 	}
+exit:
 	_exit_critical_bh(&(pmlmepriv->scanned_queue.lock), &irqL);
 
 	return 0;
