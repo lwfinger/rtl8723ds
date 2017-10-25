@@ -71,7 +71,7 @@ ODM_ChangeDynamicInitGainThresh(
 	}
 }	// DM_ChangeDynamicInitGainThresh //
 
-int 
+static int 
 getIGIForDiff(int value_IGI)
 {
 	#define ONERCCA_LOW_TH		0x30
@@ -87,7 +87,7 @@ getIGIForDiff(int value_IGI)
 	}
 }
 
-VOID
+static VOID
 odm_FAThresholdCheck(
 	IN		PVOID			pDM_VOID,
 	IN		BOOLEAN			bDFSBand,
@@ -138,7 +138,7 @@ odm_FAThresholdCheck(
 	return;
 }
 
-u1Byte
+static u1Byte
 odm_ForbiddenIGICheck(
 	IN		PVOID			pDM_VOID,
 	IN		u1Byte			DIG_Dynamic_MIN,
@@ -255,7 +255,7 @@ odm_ForbiddenIGICheck(
 
 }
 
-VOID
+static VOID
 odm_InbandNoiseCalculate (	
 	IN		PVOID		pDM_VOID
 	)
@@ -376,7 +376,7 @@ odm_InbandNoiseCalculate (
 	return;
 }
 
-VOID
+static VOID
 odm_DigForBtHsMode(
 	IN		PVOID		pDM_VOID
 	)
@@ -408,7 +408,7 @@ odm_DigForBtHsMode(
 #endif
 }
 
-VOID
+static VOID
 phydm_setBigJumpStep(
 	IN	PVOID			pDM_VOID,
 	IN	u1Byte			CurrentIGI
@@ -653,7 +653,7 @@ odm_PauseDIG(
 
 }
 
-BOOLEAN 
+static BOOLEAN 
 odm_DigAbort(
 	IN		PVOID			pDM_VOID
 	)

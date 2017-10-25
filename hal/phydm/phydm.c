@@ -25,7 +25,7 @@
 #include "mp_precomp.h"
 #include "phydm_precomp.h"
 
-const u2Byte dB_Invert_Table[12][8] = {
+static const u2Byte dB_Invert_Table[12][8] = {
 	{	1,		1,		1,		2,		2,		2,		2,		3},
 	{	3,		3,		4,		4,		4,		5,		6,		6},
 	{	7,		8,		9,		10,		11,		13,		14,		16},
@@ -184,7 +184,7 @@ ODM_InitMpDriverStatus(
 #endif
 }
 
-VOID
+static VOID
 ODM_UpdateMpDriverStatus(
 	IN		PDM_ODM_T		pDM_Odm
 )
@@ -206,7 +206,7 @@ ODM_UpdateMpDriverStatus(
 #endif
 }
 
-VOID
+static VOID
 PHYDM_InitTRXAntennaSetting(
 	IN		PDM_ODM_T		pDM_Odm
 )
@@ -228,7 +228,7 @@ PHYDM_InitTRXAntennaSetting(
 /*#endif*/
 }
 
-void
+static void
 phydm_traffic_load_decision( 
 	IN		PVOID	pDM_VOID
 	)
@@ -287,7 +287,7 @@ phydm_traffic_load_decision(
 	}
 }
 
-VOID
+static VOID
 phydm_config_ofdm_tx_path(
 	IN		PDM_ODM_T		pDM_Odm,
 	IN		u4Byte			path
@@ -314,7 +314,7 @@ phydm_config_ofdm_tx_path(
 	#endif
 }
 
-VOID
+static VOID
 phydm_config_ofdm_rx_path(
 	IN		PDM_ODM_T		pDM_Odm,
 	IN		u4Byte			path
@@ -342,7 +342,7 @@ phydm_config_ofdm_rx_path(
 	#endif
 }
 
-VOID
+static VOID
 phydm_config_cck_rx_antenna_init(
 	IN		PDM_ODM_T		pDM_Odm
 )
@@ -362,7 +362,7 @@ phydm_config_cck_rx_antenna_init(
 	#endif
 }
 
-VOID
+static VOID
 phydm_config_cck_rx_path(
 	IN		PDM_ODM_T		pDM_Odm,
 	IN		u1Byte			path,
@@ -464,7 +464,7 @@ phydm_config_trx_path(
 		
 }
 
-VOID
+static VOID
 phydm_Init_cck_setting(
 	IN		PDM_ODM_T		pDM_Odm
 )
@@ -518,7 +518,7 @@ phydm_Init_cck_setting(
 	
 }
 
-VOID
+static VOID
 PHYDM_InitSoftMLSetting(
 	IN		PDM_ODM_T		pDM_Odm
 )
@@ -531,7 +531,7 @@ PHYDM_InitSoftMLSetting(
 #endif
 }
 
-VOID
+static VOID
 PHYDM_InitHwInfoByRfe(
 	IN		PDM_ODM_T		pDM_Odm
 )
@@ -542,7 +542,7 @@ PHYDM_InitHwInfoByRfe(
 #endif
 }
 
-VOID
+static VOID
 odm_CommonInfoSelfInit(
 	IN		PDM_ODM_T		pDM_Odm
 	)
@@ -588,7 +588,7 @@ odm_CommonInfoSelfInit(
 	
 }
 
-VOID
+static VOID
 odm_CommonInfoSelfUpdate(
 	IN		PDM_ODM_T		pDM_Odm
 	)
@@ -696,7 +696,7 @@ odm_CommonInfoSelfUpdate(
 	pDM_Odm->phydm_sys_up_time += pDM_Odm->phydm_period;
 }
 
-VOID
+static VOID
 odm_CommonInfoSelfReset(
 	IN		PDM_ODM_T		pDM_Odm
 	)
@@ -754,7 +754,7 @@ PhyDM_Get_Structure(
 	return	pStruct;
 }
 
-VOID
+static VOID
 odm_HWSetting(
 	IN		PDM_ODM_T		pDM_Odm
 	)
@@ -2840,7 +2840,7 @@ phydm_set_ext_switch(
 	}
 }
 
-VOID
+static VOID
 phydm_csi_mask_enable(
 	IN		PVOID		pDM_VOID,
 	IN		u4Byte		enable
@@ -2864,7 +2864,7 @@ phydm_csi_mask_enable(
 	
 }
 
-VOID
+static VOID
 phydm_clean_all_csi_mask(
 	IN		PVOID		pDM_VOID
 )
@@ -2891,7 +2891,7 @@ phydm_clean_all_csi_mask(
 	}
 }
 
-VOID
+static VOID
 phydm_set_csi_mask_reg(
 	IN		PVOID		pDM_VOID,
 	IN		u4Byte		tone_idx_tmp,
@@ -2954,7 +2954,7 @@ phydm_set_csi_mask_reg(
 	ODM_RT_TRACE(pDM_Odm, ODM_COMP_API, ODM_DBG_LOUD, ("New Mask tone idx[%d]:  Reg0x%x = ((0x%x))\n", (tone_idx_tmp + tone_num_shift), target_reg, reg_tmp_value));
 }
 
-VOID
+static VOID
 phydm_set_nbi_reg(
 	IN		PVOID		pDM_VOID,
 	IN		u4Byte		tone_idx_tmp,
@@ -3022,7 +3022,7 @@ phydm_set_nbi_reg(
 }
 
 
-VOID
+static VOID
 phydm_nbi_enable(
 	IN		PVOID		pDM_VOID,
 	IN		u4Byte		enable
@@ -3045,7 +3045,7 @@ phydm_nbi_enable(
 	}
 }
 
-u1Byte
+static u1Byte
 phydm_calculate_fc(
 	IN		PVOID		pDM_VOID,
 	IN		u4Byte		channel,
@@ -3126,7 +3126,7 @@ phydm_calculate_fc(
 }
 
 
-u1Byte
+static u1Byte
 phydm_calculate_intf_distance(
 	IN		PVOID		pDM_VOID,
 	IN		u4Byte		bw,
@@ -3160,7 +3160,7 @@ phydm_calculate_intf_distance(
 }
 
 
-u1Byte
+static u1Byte
 phydm_csi_mask_setting(
 	IN		PVOID		pDM_VOID,
 	IN		u4Byte		enable,

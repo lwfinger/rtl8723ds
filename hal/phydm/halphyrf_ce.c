@@ -726,7 +726,7 @@ u1Byte ODM_GetRightChnlPlaceforIQK(u1Byte chnl)
 }
 #endif
 
-VOID
+static VOID
 odm_IQCalibrate(
 		IN	PDM_ODM_T	pDM_Odm 
 		)
