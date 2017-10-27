@@ -210,10 +210,11 @@ exit:
 	return;
 }
 
-static u32 getcrc32(u8 *buf, sint len)
+static __le32 getcrc32(u8 *buf, sint len)
 {
 	u8 *p;
 	u32  crc;
+
 	if (bcrc32initialized == 0)
 		crc32_init();
 
@@ -221,7 +222,7 @@ static u32 getcrc32(u8 *buf, sint len)
 
 	for (p = buf; len > 0; ++p, --len)
 		crc = crc32_table[(crc ^ *p) & 0xff] ^ (crc >> 8);
-	return ~crc;    /* transmit complement, per CRC-32 spec */
+	return cpu_to_le32(~crc);    /* transmit complement, per CRC-32 spec */
 }
 
 
@@ -278,7 +279,7 @@ void rtw_wep_encrypt(_adapter *padapter, u8 *pxmitframe)
 
 				length = pattrib->last_txcmdsz - pattrib->hdrlen - pattrib->iv_len - pattrib->icv_len;
 
-				*((__le32 *)crc) = cpu_to_le32(getcrc32(payload, length));
+				*((__le32 *)crc) = getcrc32(payload, length);
 
 				arcfour_init(&mycontext, wepkey, 3 + keylength);
 				arcfour_encrypt(&mycontext, payload, payload, length);
@@ -286,7 +287,7 @@ void rtw_wep_encrypt(_adapter *padapter, u8 *pxmitframe)
 
 			} else {
 				length = pxmitpriv->frag_len - pattrib->hdrlen - pattrib->iv_len - pattrib->icv_len ;
-				*((__le32 *)crc) = cpu_to_le32(getcrc32(payload, length));
+				*((__le32 *)crc) = getcrc32(payload, length);
 				arcfour_init(&mycontext, wepkey, 3 + keylength);
 				arcfour_encrypt(&mycontext, payload, payload, length);
 				arcfour_encrypt(&mycontext, payload + length, crc, 4);
@@ -337,7 +338,7 @@ void rtw_wep_decrypt(_adapter  *padapter, u8 *precvframe)
 		arcfour_encrypt(&mycontext, payload, payload,  length);
 
 		/* calculate icv and compare the icv */
-		*((__le32 *)crc) = le32_to_cpu(getcrc32(payload, length - 4));
+		*((__le32 *)crc) = getcrc32(payload, length - 4);
 
 
 		WEP_SW_DEC_CNT_INC(psecuritypriv, prxattrib->ra);
@@ -761,7 +762,7 @@ u32	rtw_tkip_encrypt(_adapter *padapter, u8 *pxmitframe)
 
 				if ((curfragnum + 1) == pattrib->nr_frags) {	/* 4 the last fragment */
 					length = pattrib->last_txcmdsz - pattrib->hdrlen - pattrib->iv_len - pattrib->icv_len;
-					*((__le32 *)crc) = cpu_to_le32(getcrc32(payload, length)); /* modified by Amy*/
+					*((__le32 *)crc) = getcrc32(payload, length); /* modified by Amy*/
 
 					arcfour_init(&mycontext, rc4key, 16);
 					arcfour_encrypt(&mycontext, payload, payload, length);
@@ -769,7 +770,7 @@ u32	rtw_tkip_encrypt(_adapter *padapter, u8 *pxmitframe)
 
 				} else {
 					length = pxmitpriv->frag_len - pattrib->hdrlen - pattrib->iv_len - pattrib->icv_len ;
-					*((__le32 *)crc) = cpu_to_le32(getcrc32(payload, length)); /* modified by Amy*/
+					*((__le32 *)crc) = getcrc32(payload, length); /* modified by Amy*/
 					arcfour_init(&mycontext, rc4key, 16);
 					arcfour_encrypt(&mycontext, payload, payload, length);
 					arcfour_encrypt(&mycontext, payload + length, crc, 4);
@@ -887,7 +888,7 @@ u32 rtw_tkip_decrypt(_adapter *padapter, u8 *precvframe)
 			arcfour_init(&mycontext, rc4key, 16);
 			arcfour_encrypt(&mycontext, payload, payload, length);
 
-			*((__le32 *)crc) = le32_to_cpu(getcrc32(payload, length - 4));
+			*((__le32 *)crc) = getcrc32(payload, length - 4);
 
 			if (crc[3] != payload[length - 1] || crc[2] != payload[length - 2] || crc[1] != payload[length - 3] || crc[0] != payload[length - 4]) {
 				res = _FAIL;
@@ -961,12 +962,12 @@ static void construct_mic_iv(
 	u8 *mpdu,
 	uint payload_length,
 	u8 *pn_vector,
-	uint frtype);/* add for CONFIG_IEEE80211W, none 11w also can use */
+	u16 frtype);/* add for CONFIG_IEEE80211W, none 11w also can use */
 static void construct_mic_header1(
 	u8 *mic_header1,
 	sint header_length,
 	u8 *mpdu,
-	uint frtype);/* add for CONFIG_IEEE80211W, none 11w also can use */
+	u16 frtype);/* add for CONFIG_IEEE80211W, none 11w also can use */
 static void construct_mic_header2(
 	u8 *mic_header2,
 	u8 *mpdu,
@@ -979,7 +980,7 @@ static void construct_ctr_preload(
 	u8 *mpdu,
 	u8 *pn_vector,
 	sint c,
-	uint frtype);/* add for CONFIG_IEEE80211W, none 11w also can use */
+	u16 frtype);/* add for CONFIG_IEEE80211W, none 11w also can use */
 static void xor_128(u8 *a, u8 *b, u8 *out);
 static void xor_32(u8 *a, u8 *b, u8 *out);
 static u8 sbox(u8 a);
@@ -1177,7 +1178,7 @@ static void construct_mic_iv(
 	u8 *mpdu,
 	uint payload_length,
 	u8 *pn_vector,
-	uint frtype/* add for CONFIG_IEEE80211W, none 11w also can use */
+	u16 frtype/* add for CONFIG_IEEE80211W, none 11w also can use */
 )
 {
 	sint i;
@@ -1217,7 +1218,7 @@ static void construct_mic_header1(
 	u8 *mic_header1,
 	sint header_length,
 	u8 *mpdu,
-	uint frtype/* add for CONFIG_IEEE80211W, none 11w also can use */
+	u16 frtype/* add for CONFIG_IEEE80211W, none 11w also can use */
 )
 {
 	mic_header1[0] = (u8)((header_length - 2) / 256);
@@ -1310,7 +1311,7 @@ static void construct_ctr_preload(
 	u8 *mpdu,
 	u8 *pn_vector,
 	sint c,
-	uint frtype /* add for CONFIG_IEEE80211W, none 11w also can use */
+	u16 frtype /* add for CONFIG_IEEE80211W, none 11w also can use */
 )
 {
 	sint i = 0;
@@ -1373,8 +1374,8 @@ static sint aes_cipher(u8 *key, uint	hdrlen,
 	u8 padded_buffer[16];
 	u8 mic[8];
 	/*	uint	offset = 0; */
-	__le16	frtype  = GetFrameType(pframe);
-	__le16  frsubtype = GetFrameSubType(pframe);
+	u16	frtype  = GetFrameType(pframe);
+	u16  frsubtype = GetFrameSubType(pframe);
 
 	frsubtype = frsubtype >> 4;
 
@@ -1682,9 +1683,8 @@ static sint aes_decipher(u8 *key, uint	hdrlen,
 
 
 	/*	uint	offset = 0; */
-	__le16	frtype  = GetFrameType(pframe);
-	__le16	frsubtype  = GetFrameSubType(pframe);
-	frsubtype = frsubtype >> 4;
+	u16	frtype  = GetFrameType(pframe);
+	u16	frsubtype  = GetFrameSubType(pframe) >> 4;
 
 
 	_rtw_memset((void *)mic_iv, 0, 16);
@@ -1722,11 +1722,11 @@ static sint aes_decipher(u8 *key, uint	hdrlen,
 
 			hdrlen += 2;
 	} /* only for data packet . add for CONFIG_IEEE80211W, none 11w also can use */
-	else if ((frtype == WIFI_DATA) &&
-		 ((frsubtype == 0x08) ||
+	else if ((frtype == WIFI_DATA &&
+		 (frsubtype == 0x08)) ||
 		  (frsubtype == 0x09) ||
 		  (frsubtype == 0x0a) ||
-		  (frsubtype == 0x0b))) {
+		  (frsubtype == 0x0b)) {
 		if (hdrlen !=  WLAN_HDR_A3_QOS_LEN)
 
 			hdrlen += 2;
