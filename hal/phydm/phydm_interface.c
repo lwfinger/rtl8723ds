@@ -561,6 +561,7 @@ ODM_SetTimer(
 
 }
 
+#if LINUX_VERSION_CODE < KERNEL_VERSION(4, 15, 0)
 VOID
 ODM_InitializeTimer(
 	IN 	PDM_ODM_T			pDM_Odm,
@@ -570,20 +571,10 @@ ODM_InitializeTimer(
 	IN	const char*			szID
 	)
 {
-#if (DM_ODM_SUPPORT_TYPE & ODM_AP)
-	init_timer(pTimer);
-	pTimer->function = CallBackFunc;
-	pTimer->data = (unsigned long)pDM_Odm;
-	/*mod_timer(pTimer, jiffies+RTL_MILISECONDS_TO_JIFFIES(10));	*/
-#elif(DM_ODM_SUPPORT_TYPE & ODM_CE)
 	PADAPTER Adapter = pDM_Odm->Adapter;
 	_init_timer(pTimer,Adapter->pnetdev,CallBackFunc,pDM_Odm);
-#elif(DM_ODM_SUPPORT_TYPE & ODM_WIN)
-	PADAPTER Adapter = pDM_Odm->Adapter;
-	PlatformInitializeTimer(Adapter, pTimer, CallBackFunc,pContext,szID);
-#endif	
 }
-
+#endif
 
 VOID
 ODM_CancelTimer(

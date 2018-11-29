@@ -1069,11 +1069,14 @@ unsigned int rtw_classify8021d(struct sk_buff *skb)
 
 
 static u16 rtw_select_queue(struct net_device *dev, struct sk_buff *skb
-#if LINUX_VERSION_CODE >= KERNEL_VERSION(3, 13, 0)
-	, void *accel_priv
-	#if LINUX_VERSION_CODE >= KERNEL_VERSION(3, 14, 0)
-	, select_queue_fallback_t fallback
-	#endif
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 19, 0))
+			    ,struct net_device *sb_dev
+                            ,select_queue_fallback_t fallback
+#elif (LINUX_VERSION_CODE >= KERNEL_VERSION(3, 14, 0))
+ 			    ,void *unused
+                             ,select_queue_fallback_t fallback
+#elif LINUX_VERSION_CODE >= KERNEL_VERSION(3, 13, 0)
+			, void *accel_priv
 #endif
 )
 {
@@ -1732,9 +1735,17 @@ u8 rtw_init_default_value(_adapter *padapter)
 }
 
 #ifdef CONFIG_SWTIMER_BASED_TXBCN
+#if LINUX_VERSION_CODE < KERNEL_VERSION(4, 15, 0)
 void _tx_beacon_timer_handlder(void *FunctionContext)
+#else
+void _tx_beacon_timer_handlder(struct timer_list *t)
+#endif
 {
+#if LINUX_VERSION_CODE < KERNEL_VERSION(4, 15, 0)
 	struct dvobj_priv *pdvobj = (struct dvobj_priv *)FunctionContext;
+#else
+	struct dvobj_priv *pdvobj = from_timer(pdvobj, t, ro_ch_timer_process);
+#endif
 
 	tx_beacon_timer_handlder(pdvobj);
 }
@@ -1778,11 +1789,21 @@ struct dvobj_priv *devobj_init(void)
 	pdvobj->inter_bcn_space = DEFAULT_BCN_INTERVAL; /* default value is equal to the default beacon_interval (100ms) */
 	_rtw_init_queue(&pdvobj->ap_if_q);
 #ifdef CONFIG_SWTIMER_BASED_TXBCN
-	_init_timer(&(pdvobj->txbcn_timer), NULL, _tx_beacon_timer_handlder, pdvobj);
+#if LINUX_VERSION_CODE < KERNEL_VERSION(4, 15, 0)
+	_init_timer(&pdvobj->txbcn_timer, NULL, _tx_beacon_timer_handlder,
+		    pdvobj);
+#else
+	timer_setup(&pdvobj->txbcn_timer, _tx_beacon_timer_handlder, 0);
+#endif
 #endif
 #endif
 
-	_init_timer(&(pdvobj->dynamic_chk_timer), NULL, _dynamic_check_timer_handlder, pdvobj);
+#if LINUX_VERSION_CODE < KERNEL_VERSION(4, 15, 0)
+	_init_timer(&(pdvobj->dynamic_chk_timer), NULL,
+		    _dynamic_check_timer_handlder, pdvobj);
+#else
+	timer_setup(&pdvobj->dynamic_chk_timer, _dynamic_check_timer_handlder, 0);
+#endif
 
 #ifdef CONFIG_MCC_MODE
 	_rtw_mutex_init(&(pdvobj->mcc_objpriv.mcc_mutex));

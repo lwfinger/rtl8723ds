@@ -373,7 +373,6 @@ struct led_priv {
 			(adapter)->ledpriv.SwLedOff((adapter), (pLed)); \
 	} while (0)
 
-void BlinkTimerCallback(void *data);
 void BlinkWorkItemCallback(_workitem *work);
 
 void ResetLedStatus(PLED_DATA pLed);

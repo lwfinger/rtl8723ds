@@ -393,10 +393,18 @@ exit:
 	return;
 }
 
-void pwr_state_check_handler(RTW_TIMER_HDL_ARGS);
+#if LINUX_VERSION_CODE < KERNEL_VERSION(4, 15, 0)
 void pwr_state_check_handler(RTW_TIMER_HDL_ARGS)
+#else
+void pwr_state_check_handler(struct timer_list *t)
+#endif
 {
+#if LINUX_VERSION_CODE < KERNEL_VERSION(4, 15, 0)
 	_adapter *padapter = (_adapter *)FunctionContext;
+#else
+	struct pwrctrl_priv *pwrpriv = from_timer(pwrpriv, t, pwr_state_check_timer);
+	_adapter *padapter = pwrpriv->padapter;
+#endif
 	rtw_ps_cmd(padapter);
 }
 
@@ -1438,14 +1446,18 @@ exit:
 /*
  * This function is a timer handler, can't do any IO in it.
  */
+#if LINUX_VERSION_CODE < KERNEL_VERSION(4, 15, 0)
 static void pwr_rpwm_timeout_handler(void *FunctionContext)
+#else
+static void pwr_rpwm_timeout_handler(struct timer_list *t)
+#endif
 {
-	PADAPTER padapter;
-	struct pwrctrl_priv *pwrpriv;
-
-
-	padapter = (PADAPTER)FunctionContext;
-	pwrpriv = adapter_to_pwrctl(padapter);
+#if LINUX_VERSION_CODE < KERNEL_VERSION(4, 15, 0)
+	PADAPTER padapter = (PADAPTER)FunctionContext;
+	struct pwrctrl_priv *pwrpriv = adapter_to_pwrctl(padapter);
+#else
+	struct pwrctrl_priv *pwrpriv = from_timer(pwrpriv, t, pwr_rpwm_timer);
+#endif
 	RTW_INFO("+%s: rpwm=0x%02X cpwm=0x%02X\n", __func__, pwrpriv->rpwm, pwrpriv->cpwm);
 
 	if ((pwrpriv->rpwm == pwrpriv->cpwm) || (pwrpriv->cpwm >= PS_STATE_S2)) {
@@ -1934,7 +1946,7 @@ void rtw_init_pwrctrl_priv(PADAPTER padapter)
 	pwrctrlpriv->smart_ps = padapter->registrypriv.smart_ps;
 	pwrctrlpriv->bcn_ant_mode = 0;
 	pwrctrlpriv->dtim = 0;
-
+	pwrctrlpriv->padapter = padapter;
 	pwrctrlpriv->tog = 0x80;
 
 #ifdef CONFIG_LPS_LCLK
@@ -1945,11 +1957,21 @@ void rtw_init_pwrctrl_priv(PADAPTER padapter)
 #ifdef CONFIG_LPS_RPWM_TIMER
 	pwrctrlpriv->brpwmtimeout = _FALSE;
 	_init_workitem(&pwrctrlpriv->rpwmtimeoutwi, rpwmtimeout_workitem_callback, NULL);
-	_init_timer(&pwrctrlpriv->pwr_rpwm_timer, padapter->pnetdev, pwr_rpwm_timeout_handler, padapter);
+#if LINUX_VERSION_CODE < KERNEL_VERSION(4, 15, 0)
+	_init_timer(&pwrctrlpriv->pwr_rpwm_timer, padapter->pnetdev,
+		    pwr_rpwm_timeout_handler, padapter);
+#else
+	timer_setup(&pwrctrlpriv->pwr_rpwm_timer, pwr_rpwm_timeout_handler, 0);
+#endif
 #endif /* CONFIG_LPS_RPWM_TIMER */
 #endif /* CONFIG_LPS_LCLK */
 
-	rtw_init_timer(&pwrctrlpriv->pwr_state_check_timer, padapter, pwr_state_check_handler);
+#if LINUX_VERSION_CODE < KERNEL_VERSION(4, 15, 0)
+	rtw_init_timer(&pwrctrlpriv->pwr_state_check_timer, padapter,
+		       pwr_state_check_handler);
+#else
+	timer_setup(&pwrctrlpriv->pwr_state_check_timer, pwr_state_check_handler, 0);
+#endif
 
 	pwrctrlpriv->wowlan_mode = _FALSE;
 	pwrctrlpriv->wowlan_ap_mode = _FALSE;

@@ -903,8 +903,6 @@ void rtw_sta_timeout_event_callback(_adapter *adapter, u8 *pbuf);
 void rtw_update_ft_stainfo(_adapter *padapter, WLAN_BSSID_EX *pnetwork);
 void rtw_ft_reassoc_event_callback(_adapter *padapter, u8 *pbuf);
 #endif
-extern void rtw_join_timeout_handler(RTW_TIMER_HDL_ARGS);
-extern void _rtw_scan_timeout_handler(RTW_TIMER_HDL_ARGS);
 
 thread_return event_thread(thread_context context);
 
@@ -1052,10 +1050,22 @@ extern void rtw_update_registrypriv_dev_network(_adapter *adapter);
 
 extern void rtw_get_encrypt_decrypt_from_registrypriv(_adapter *adapter);
 
-extern void _rtw_join_timeout_handler(_adapter *adapter);
-extern void rtw_scan_timeout_handler(_adapter *adapter);
+void _rtw_join_timeout_handler(_adapter *adapter);
+void rtw_scan_timeout_handler(_adapter *adapter);
 
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 15, 0)
+void rtw_join_timeout_handler(struct timer_list *t);
+void _rtw_scan_timeout_handler(struct timer_list *t);
+#else
+void _rtw_scan_timeout_handler(RTW_TIMER_HDL_ARGS);
+void rtw_join_timeout_handler(RTW_TIMER_HDL_ARGS);
+#endif
+
+#if LINUX_VERSION_CODE < KERNEL_VERSION(4, 15, 0)
 extern void _dynamic_check_timer_handlder(void *FunctionContext);
+#else
+void _dynamic_check_timer_handlder(struct timer_list *t);
+#endif
 extern void rtw_dynamic_check_timer_handlder(_adapter *adapter);
 extern void rtw_iface_dynamic_check_timer_handlder(_adapter *adapter);
 

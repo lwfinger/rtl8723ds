@@ -542,7 +542,11 @@ u32 halbtcoutsrc_GetWifiLinkStatus(PBTC_COEXIST pBtCoexist)
 	return retVal;
 }
 
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 15, 0)
+static void _btmpoper_timer_hdl(struct timer_list *t)
+#else
 static void _btmpoper_timer_hdl(void *p)
+#endif
 {
 	if (GLBtcBtMpRptWait) {
 		GLBtcBtMpRptWait = 0;
@@ -2411,7 +2415,11 @@ u8 EXhalbtcoutsrc_InitlizeVariables(void *padapter)
 	/* BT Control H2C/C2H*/
 	GLBtcBtMpOperSeq = 0;
 	_rtw_mutex_init(&GLBtcBtMpOperLock);
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 15, 0)
+	timer_setup(&GLBtcBtMpOperTimer, _btmpoper_timer_hdl, 0);
+#else
 	_init_timer(&GLBtcBtMpOperTimer, ((PADAPTER)padapter)->pnetdev, _btmpoper_timer_hdl, pBtCoexist);
+#endif
 	_rtw_init_sema(&GLBtcBtMpRptSema, 0);
 	GLBtcBtMpRptSeq = 0;
 	GLBtcBtMpRptStatus = 0;

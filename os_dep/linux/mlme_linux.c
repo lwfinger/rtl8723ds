@@ -68,23 +68,47 @@ void sitesurvey_ctrl_handler(void *FunctionContext)
 }
 */
 
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 15, 0)
+void rtw_join_timeout_handler(struct timer_list *t)
+#else
 void rtw_join_timeout_handler(void *FunctionContext)
+#endif
 {
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 15, 0)
+	_adapter *adapter = from_timer(adapter, t, mlmepriv.assoc_timer);
+#else
 	_adapter *adapter = (_adapter *)FunctionContext;
+#endif
 	_rtw_join_timeout_handler(adapter);
 }
 
 
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 15, 0)
+	void _rtw_scan_timeout_handler(struct timer_list *t)
+#else
 void _rtw_scan_timeout_handler(void *FunctionContext)
+#endif
 {
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 15, 0)
+	_adapter *adapter = from_timer(adapter, t, mlmepriv.scan_to_timer);
+#else
 	_adapter *adapter = (_adapter *)FunctionContext;
+#endif
 	rtw_scan_timeout_handler(adapter);
 }
 
 
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 15, 0)
+void _dynamic_check_timer_handlder(struct timer_list *t)
+#else
 void _dynamic_check_timer_handlder(void *FunctionContext)
+#endif
 {
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 15, 0)
+	struct dvobj_priv *pdvobj = from_timer(pdvobj, t, dynamic_chk_timer);
+#else
 	struct dvobj_priv *pdvobj = (struct dvobj_priv *)FunctionContext;
+#endif
 	_adapter *adapter = dvobj_get_primary_adapter(pdvobj);
 
 #if (MP_DRIVER == 1)
@@ -101,9 +125,17 @@ void _dynamic_check_timer_handlder(void *FunctionContext)
 }
 
 #ifdef CONFIG_SET_SCAN_DENY_TIMER
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 15, 0)
+void _rtw_set_scan_deny_timer_hdl(struct timer_list *t)
+#else
 void _rtw_set_scan_deny_timer_hdl(void *FunctionContext)
+#endif
 {
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 15, 0)
+	_adapter *adapter = from_timer(adapter, t, mlmepriv.set_scan_deny_timer);
+#else
 	_adapter *adapter = (_adapter *)FunctionContext;
+#endif
 	rtw_set_scan_deny_timer_hdl(adapter);
 }
 #endif
@@ -113,16 +145,30 @@ void rtw_init_mlme_timer(_adapter *padapter)
 {
 	struct	mlme_priv *pmlmepriv = &padapter->mlmepriv;
 
-	_init_timer(&(pmlmepriv->assoc_timer), padapter->pnetdev, rtw_join_timeout_handler, padapter);
-	/* _init_timer(&(pmlmepriv->sitesurveyctrl.sitesurvey_ctrl_timer), padapter->pnetdev, sitesurvey_ctrl_handler, padapter); */
-	_init_timer(&(pmlmepriv->scan_to_timer), padapter->pnetdev, _rtw_scan_timeout_handler, padapter);
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 15, 0)
+	timer_setup(&pmlmepriv->assoc_timer, rtw_join_timeout_handler, 0);
+	timer_setup(&pmlmepriv->scan_to_timer, _rtw_scan_timeout_handler, 0);
+#ifdef CONFIG_DFS_MASTER
+	timer_setup(&pmlmepriv->dfs_master_timer, rtw_dfs_master_timer_hdl, 0);
+#endif
+#ifdef CONFIG_SET_SCAN_DENY_TIMER
+	timer_setup(&pmlmepriv->set_scan_deny_timer,
+		    _rtw_set_scan_deny_timer_hdl, 0);
+#endif
+#else
+	_init_timer(&pmlmepriv->assoc_timer, padapter->pnetdev,
+		    rtw_join_timeout_handler, padapter);
+	_init_timer(&pmlmepriv->scan_to_timer, padapter->pnetdev,
+		    _rtw_scan_timeout_handler, padapter);
 
 #ifdef CONFIG_DFS_MASTER
-	_init_timer(&(pmlmepriv->dfs_master_timer), padapter->pnetdev, rtw_dfs_master_timer_hdl, padapter);
+	_init_timer(&(pmlmepriv->dfs_master_timer), padapter->pnetdev,
+		    rtw_dfs_master_timer_hdl, padapter);
 #endif
 
 #ifdef CONFIG_SET_SCAN_DENY_TIMER
 	_init_timer(&(pmlmepriv->set_scan_deny_timer), padapter->pnetdev, _rtw_set_scan_deny_timer_hdl, padapter);
+#endif
 #endif
 
 #ifdef RTK_DMP_PLATFORM
@@ -156,8 +202,6 @@ void rtw_os_indicate_connect(_adapter *adapter)
 #ifdef RTK_DMP_PLATFORM
 	_set_workitem(&adapter->mlmepriv.Linkup_workitem);
 #endif
-
-
 }
 
 extern void indicate_wx_scan_complete_event(_adapter *padapter);
@@ -199,7 +243,6 @@ void rtw_reset_securitypriv(_adapter *adapter)
 		pmlmeext->mgnt_80211w_IPN_rx = 0;
 #endif /* CONFIG_IEEE80211W */
 		_rtw_memset((unsigned char *)&adapter->securitypriv, 0, sizeof(struct security_priv));
-		/* _init_timer(&(adapter->securitypriv.tkip_timer),adapter->pnetdev, rtw_use_tkipkey_handler, adapter); */
 
 		/* Added by Albert 2009/02/18 */
 		/* Restore the PMK information to securitypriv structure for the following connection. */
@@ -300,38 +343,78 @@ void rtw_report_sec_ie(_adapter *adapter, u8 authmode, u8 *sec_ie)
 
 }
 
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 15, 0)
+void _survey_timer_hdl(struct timer_list *t)
+#else
 void _survey_timer_hdl(void *FunctionContext)
+#endif
 {
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 15, 0)
+	_adapter *padapter = from_timer(padapter, t, mlmeextpriv.survey_timer);
+#else
 	_adapter *padapter = (_adapter *)FunctionContext;
+#endif
 
 	survey_timer_hdl(padapter);
 }
 
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 15, 0)
+void _link_timer_hdl(struct timer_list *t)
+#else
 void _link_timer_hdl(void *FunctionContext)
+#endif
 {
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 15, 0)
+	_adapter *padapter = from_timer(padapter, t, mlmeextpriv.link_timer);
+#else
 	_adapter *padapter = (_adapter *)FunctionContext;
+#endif
 	link_timer_hdl(padapter);
 }
 
 #ifdef CONFIG_RTW_80211R
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 15, 0)
+void _ft_link_timer_hdl(struct timer_list *t)
+#else
 void _ft_link_timer_hdl(void *FunctionContext)
+#endif
 {
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 15, 0)
+        _adapter *padapter = from_timer(padapter, t, mlmeextpriv.ft_link_timer);
+#else
 	_adapter *padapter = (_adapter *)FunctionContext;
+#endif
 
 	ft_link_timer_hdl(padapter);
 }
 
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 15, 0)
+void _ft_roam_timer_hdl(struct timer_list *t)
+#else
 void _ft_roam_timer_hdl(void *FunctionContext)
+#endif
 {
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 15, 0)
+        _adapter *padapter = from_timer(padapter, t, mlmeextpriv.ft_roam_timer);
+#else
 	_adapter *padapter = (_adapter *)FunctionContext;
+#endif
 
 	ft_roam_timer_hdl(padapter);
 }
 #endif
 
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 15, 0)
+void _addba_timer_hdl(struct timer_list *t)
+#else
 void _addba_timer_hdl(void *FunctionContext)
+#endif
 {
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 15, 0)
+	struct sta_info *psta = from_timer(psta, t, addba_retry_timer);
+#else
 	struct sta_info *psta = (struct sta_info *)FunctionContext;
+#endif
 	addba_timer_hdl(psta);
 }
 
@@ -346,7 +429,12 @@ void _sa_query_timer_hdl(void *FunctionContext)
 
 void init_dot11w_expire_timer(_adapter *padapter, struct sta_info *psta)
 {
-	_init_timer(&psta->dot11w_expire_timer, padapter->pnetdev, _sa_query_timer_hdl, psta);
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 15, 0)
+	timer_setup(&psta->dot11w_expire_timer, _sa_query_timer_hdl, psta, 0);
+#else
+	_init_timer(&psta->dot11w_expire_timer, padapter->pnetdev,
+		    _sa_query_timer_hdl, psta);
+#endif
 }
 
 #endif /* CONFIG_IEEE80211W */
@@ -354,7 +442,12 @@ void init_dot11w_expire_timer(_adapter *padapter, struct sta_info *psta)
 void init_addba_retry_timer(_adapter *padapter, struct sta_info *psta)
 {
 
-	_init_timer(&psta->addba_retry_timer, padapter->pnetdev, _addba_timer_hdl, psta);
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 15, 0)
+	timer_setup(&psta->addba_retry_timer, _addba_timer_hdl, 0);
+#else
+	_init_timer(&psta->addba_retry_timer, padapter->pnetdev, _addba_timer_hdl,
+		    psta);
+#endif
 }
 
 /*
@@ -375,17 +468,21 @@ void init_mlme_ext_timer(_adapter *padapter)
 {
 	struct	mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
 
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 15, 0)
+	timer_setup(&pmlmeext->survey_timer, _survey_timer_hdl, 0);
+	timer_setup(&pmlmeext->link_timer, _link_timer_hdl, 0);
+#ifdef CONFIG_RTW_80211R
+	timer_setup(&pmlmeext->ft_link_timer, _ft_link_timer_hdl, 0);
+	timer_setup(&pmlmeext->ft_roam_timer, _ft_roam_timer_hdl, 0);
+#endif
+#else
 	_init_timer(&pmlmeext->survey_timer, padapter->pnetdev, _survey_timer_hdl, padapter);
 	_init_timer(&pmlmeext->link_timer, padapter->pnetdev, _link_timer_hdl, padapter);
 #ifdef CONFIG_RTW_80211R
 	_init_timer(&pmlmeext->ft_link_timer, padapter->pnetdev, _ft_link_timer_hdl, padapter);
 	_init_timer(&pmlmeext->ft_roam_timer, padapter->pnetdev, _ft_roam_timer_hdl, padapter);
 #endif
-
-	/* _init_timer(&pmlmeext->ADDBA_timer, padapter->pnetdev, _addba_timer_hdl, padapter); */
-
-	/* _init_timer(&pmlmeext->reauth_timer, padapter->pnetdev, _reauth_timer_hdl, padapter); */
-	/* _init_timer(&pmlmeext->reassoc_timer, padapter->pnetdev, _reassoc_timer_hdl, padapter); */
+#endif
 }
 
 #ifdef CONFIG_AP_MODE

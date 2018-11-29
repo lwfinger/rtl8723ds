@@ -5306,8 +5306,12 @@ ODM_AntDivTimers(
 	if(state==INIT_ANTDIV_TIMMER)
 	{
 		#ifdef CONFIG_S0S1_SW_ANTENNA_DIVERSITY
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 15, 0)
+			setup_timer(&pDM_Odm->DM_SWAT_Table.phydm_SwAntennaSwitchTimer, ODM_SW_AntDiv_Callback, 0)
+#else
 			ODM_InitializeTimer(pDM_Odm, &(pDM_Odm->DM_SWAT_Table.phydm_SwAntennaSwitchTimer),
 			(RT_TIMER_CALL_BACK)ODM_SW_AntDiv_Callback, NULL, "phydm_SwAntennaSwitchTimer");
+#endif
 		#elif ( defined(CONFIG_5G_CG_SMART_ANT_DIVERSITY) ) ||( defined(CONFIG_2G_CG_SMART_ANT_DIVERSITY) )
 			ODM_InitializeTimer(pDM_Odm,&pDM_Odm->FastAntTrainingTimer,
 			(RT_TIMER_CALL_BACK)odm_FastAntTrainingCallback, NULL, "FastAntTrainingTimer");
