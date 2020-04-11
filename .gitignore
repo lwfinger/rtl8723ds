@@ -16,6 +16,7 @@
 
 # temporary files
 *.cmd
+*.d
 modules.order
 *.mod.c
 Module.symvers
