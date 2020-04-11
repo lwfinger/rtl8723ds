@@ -2005,7 +2005,7 @@ InitLed(
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 15, 0)
 	timer_setup(&pLed->BlinkTimer, BlinkTimerCallback, 0);
 #else
-	_init_timer(&pLed->BlinkTimer, padapter->pnetdev, linkTimerCallback, pLed);
+	_init_timer(&pLed->BlinkTimer, padapter->pnetdev, BlinkTimerCallback, pLed);
 #endif
 	_init_workitem(&(pLed->BlinkWorkItem), BlinkWorkItemCallback, pLed);
 }
