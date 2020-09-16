@@ -2376,6 +2376,7 @@ static int rtw_wx_set_mlme(struct net_device *dev,
 		break;
 
 	default:
+		pr_info("%s - mlme->cmd %d not supported\n", __func__, mlme->cmd);
 		return -EOPNOTSUPP;
 	}
 
@@ -3219,7 +3220,10 @@ static int rtw_wx_set_enc(struct net_device *dev,
 
 	if (rtw_set_802_11_add_wep(padapter, &wep) == _FALSE) {
 		if (rf_on == pwrpriv->rf_pwrstate)
+		{
+			pr_info("%s - rtw_set_802_11_add_wep() failed with rf on\n", __func__);
 			ret = -EOPNOTSUPP;
+		}
 		goto exit;
 	}
 
@@ -3480,6 +3484,7 @@ static int rtw_wx_set_auth(struct net_device *dev,
 #endif
 
 	default:
+		pr_info("%s - param->flags %d\n", __func__, param->flags);
 		return -EOPNOTSUPP;
 
 	}
@@ -7355,12 +7360,8 @@ static int wpa_set_param(struct net_device *dev, u8 name, u32 value)
 		break;
 
 	default:
-
-
-
+		pr_info("%s - name %d\n", __func__, name);
 		ret = -EOPNOTSUPP;
-
-
 		break;
 
 	}
@@ -7390,6 +7391,7 @@ static int wpa_mlme(struct net_device *dev, u32 command, u32 reason)
 		break;
 
 	default:
+		pr_info("%s - command %d\n", __func__, command);
 		ret = -EOPNOTSUPP;
 		break;
 	}
@@ -13246,6 +13248,7 @@ int rtw_ioctl(struct net_device *dev, struct ifreq *rq, int cmd)
 		ret = rtw_android_priv_cmd(dev, rq, cmd);
 		break;
 	default:
+		pr_info("%s - cmd %d\n", __func__, cmd);
 		ret = -EOPNOTSUPP;
 		break;
 	}
