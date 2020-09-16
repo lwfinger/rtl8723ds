@@ -1862,6 +1862,7 @@ static int cfg80211_rtw_change_iface(struct wiphy *wiphy,
 		ndev->type = ARPHRD_IEEE80211_RADIOTAP; /* IEEE 802.11 + radiotap header : 803 */
 		break;
 	default:
+		pr_info("%s - type %d\n", __func__, type);
 		ret = -EOPNOTSUPP;
 		goto exit;
 	}
@@ -3215,7 +3216,10 @@ static int cfg80211_rtw_connect(struct wiphy *wiphy, struct net_device *ndev,
 		_rtw_memcpy(pwep->KeyMaterial, (void *)sme->key, pwep->KeyLength);
 
 		if (rtw_set_802_11_add_wep(padapter, pwep) == (u8)_FAIL)
+		{
+			pr_info("%s - rtw_set_802_11_add_wep() failed\n", __func__);
 			ret = -EOPNOTSUPP ;
+		}
 
 		if (pwep)
 			rtw_mfree((u8 *)pwep, wep_total_len);
