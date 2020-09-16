@@ -33,3 +33,13 @@ Step - 3: Now, run the following commands in the same Linux terminal.
 make
 sudo make install
 sudo modprobe -v 8723ds
+```
+
+## c. Disable Debug Output
+If you do not need the debug output then follow these instructions.
+
+Step - 1: Search in Makefile for "CONFIG_RTW_DEBUG = y"
+
+Step - 2: Change it to "CONFIG_RTW_DEBUG = n"
+
+Step - 3: (re)compile
