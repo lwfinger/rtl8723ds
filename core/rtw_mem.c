@@ -73,11 +73,6 @@ static int __init rtw_mem_init(void)
 	pr_info("MAX_RTKM_NR_PREALLOC_RECV_SKB: %d\n", MAX_RTKM_NR_PREALLOC_RECV_SKB);
 	pr_info("MAX_RTKM_RECVBUF_SZ: %d\n", MAX_RTKM_RECVBUF_SZ);
 
-#ifdef CONFIG_USE_USB_BUFFER_ALLOC_RX
-	for (i = 0; i < NR_RECVBUFF; i++)
-		rtk_buf_mem[i] = usb_buffer_alloc(dev, size, (in_interrupt() ? GFP_ATOMIC : GFP_KERNEL), dma);
-#endif /* CONFIG_USE_USB_BUFFER_ALLOC_RX */
-
 	skb_queue_head_init(&rtk_skb_mem_q);
 
 	for (i = 0; i < MAX_RTKM_NR_PREALLOC_RECV_SKB; i++) {
