@@ -275,11 +275,12 @@ void rtw_os_xmit_complete(_adapter *padapter, struct xmit_frame *pxframe)
 void rtw_os_xmit_schedule(_adapter *padapter)
 {
 #if defined(CONFIG_SDIO_HCI) || defined(CONFIG_GSPI_HCI)
-	_adapter *pri_adapter = GET_PRIMARY_ADAPTER(padapter);
+	_adapter *pri_adapter;
 
 	if (!padapter)
 		return;
 
+	pri_adapter = GET_PRIMARY_ADAPTER(padapter);
 	if (_rtw_queue_empty(&padapter->xmitpriv.pending_xmitbuf_queue) == _FALSE)
 		_rtw_up_sema(&pri_adapter->xmitpriv.xmit_sema);
 

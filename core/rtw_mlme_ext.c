@@ -9898,8 +9898,9 @@ static int issue_action_ba(_adapter *padapter, unsigned char *raddr, unsigned ch
 				psta->BA_starting_seqctrl[tid & 0x07] = start_seq;
 
 				BA_starting_seqctrl = start_seq << 4;
+			} else {
+				BA_starting_seqctrl = 0;
 			}
-
 			BA_starting_seqctrl = cpu_to_le16(BA_starting_seqctrl);
 			pframe = rtw_set_fixed_ie(pframe, 2, (unsigned char *)(&(BA_starting_seqctrl)), &(pattrib->pktlen));
 			break;
