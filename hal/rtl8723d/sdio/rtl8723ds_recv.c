@@ -421,7 +421,7 @@ s32 rtl8723ds_init_recv_priv(PADAPTER padapter)
 
 	/* 3 2. init tasklet */
 	tasklet_init(&precvpriv->recv_tasklet,
-		     (void(*)(unsigned long))rtl8723ds_recv_tasklet,
+		     (void *)rtl8723ds_recv_tasklet,
 		     (unsigned long)padapter);
 
 	goto exit;

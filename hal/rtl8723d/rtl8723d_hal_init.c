@@ -5250,7 +5250,7 @@ void SetHwReg8723D(PADAPTER padapter, u8 variable, u8 *val)
 			val32 |= RCR_CBSSID_DATA | RCR_CBSSID_BCN;
 		else
 			val32 &= ~(RCR_CBSSID_DATA | RCR_CBSSID_BCN);
-			rtw_write32(padapter, REG_RCR, val32);
+		rtw_write32(padapter, REG_RCR, val32);
 	}
 		break;
 
@@ -5339,7 +5339,7 @@ void SetHwReg8723D(PADAPTER padapter, u8 variable, u8 *val)
 		regTmp = 0;
 		if (bShortPreamble)
 			regTmp |= 0x80;
-			rtw_write8(padapter, REG_RRSR + 2, regTmp);
+		rtw_write8(padapter, REG_RRSR + 2, regTmp);
 	}
 		break;
 
