@@ -143,6 +143,9 @@ CONFIG_PLATFORM_RTK119X = n
 CONFIG_PLATFORM_RTK129X = n
 CONFIG_PLATFORM_NOVATEK_NT72668 = n
 CONFIG_PLATFORM_HISILICON = n
+# Config for riscv is at a fundamental level. 
+# Further modification may be required.
+CONFIG_PLATFORM_RISCV = n
 ###############################################################
 
 CONFIG_DRVEXT_MODULE = n
@@ -1719,6 +1722,12 @@ CROSS_COMPILE := /home/android_sdk/Telechips/v13.05_r1-tcc-android-4.2.2_tcc893x
 KSRC := /home/android_sdk/Telechips/v13.05_r1-tcc-android-4.2.2_tcc893x-evm_build/kernel
 MODULE_NAME := wlan
 endif 
+
+ifeq ($(CONFIG_PLATFORM_RISCV), y)
+# This is a gereric config. More modification may be required.
+EXTRA_CFLAGS += -DCONFIG_LITTLE_ENDIAN
+ARCH := riscv
+endif
 
 ifeq ($(CONFIG_MULTIDRV), y)
 
