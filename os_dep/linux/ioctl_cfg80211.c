@@ -4189,7 +4189,11 @@ static int cfg80211_rtw_change_beacon(struct wiphy *wiphy, struct net_device *nd
 	return ret;
 }
 
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(5, 19, 0))
+static int cfg80211_rtw_stop_ap(struct wiphy *wiphy, struct net_device *ndev, unsigned int link_id)
+#else
 static int cfg80211_rtw_stop_ap(struct wiphy *wiphy, struct net_device *ndev)
+#endif
 {
 	RTW_INFO(FUNC_NDEV_FMT"\n", FUNC_NDEV_ARG(ndev));
 	return 0;
@@ -7048,7 +7052,13 @@ void rtw_wdev_unregister(struct wireless_dev *wdev)
 
 	rtw_cfg80211_indicate_scan_done(adapter, _TRUE);
 
-#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 2, 0))
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(5, 19, 0))
+	if (wdev->connected) {
+		u8 locally_generated = 1;
+		RTW_INFO(FUNC_ADPT_FMT" clear connected by cfg80211_disconnected\n", FUNC_ADPT_ARG(adapter));
+		cfg80211_disconnected(adapter->pnetdev, 0, NULL, 0, locally_generated, GFP_ATOMIC);
+	}
+#elif (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 2, 0)) && (LINUX_VERSION_CODE < KERNEL_VERSION(5, 19, 0))
 	if (wdev->current_bss) {
 		u8 locally_generated = 1;
 		RTW_INFO(FUNC_ADPT_FMT" clear current_bss by cfg80211_disconnected\n", FUNC_ADPT_ARG(adapter));
