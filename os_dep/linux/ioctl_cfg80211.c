@@ -745,7 +745,11 @@ check_bss:
 		#endif
 
 		#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 12, 0)
+#if LINUX_VERSION_CODE < KERNEL_VERSION(6, 0, 0)
 		roam_info.bssid = cur_network->network.MacAddress;
+#else
+		roam_info.links[0].bssid = cur_network->network.MacAddress;
+#endif
 		roam_info.req_ie = pmlmepriv->assoc_req + sizeof(struct rtw_ieee80211_hdr_3addr) + 2;
 		roam_info.req_ie_len = pmlmepriv->assoc_req_len - sizeof(struct rtw_ieee80211_hdr_3addr) - 2;
 		roam_info.resp_ie = pmlmepriv->assoc_rsp + sizeof(struct rtw_ieee80211_hdr_3addr) + 6;
@@ -1384,13 +1388,15 @@ exit:
 	return ret;
 }
 
-static int cfg80211_rtw_add_key(struct wiphy *wiphy, struct net_device *ndev,
+static int cfg80211_rtw_add_key(struct wiphy *wiphy, struct net_device *ndev
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 1, 0)
+	, int link_id
+#endif
+	, u8 key_index
 #if (LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 37)) || defined(COMPAT_KERNEL_RELEASE)
-	u8 key_index, bool pairwise, const u8 *mac_addr,
-#else	/* (LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 37)) */
-	u8 key_index, const u8 *mac_addr,
-#endif /* (LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 37)) */
-	struct key_params *params)
+	, bool pairwise
+#endif
+	, const u8 *mac_addr, struct key_params *params)
 {
 	char *alg_name;
 	u32 param_len;
@@ -1521,14 +1527,16 @@ addkey_end:
 
 }
 
-static int cfg80211_rtw_get_key(struct wiphy *wiphy, struct net_device *ndev,
+static int cfg80211_rtw_get_key(struct wiphy *wiphy, struct net_device *ndev
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 1, 0)
+	, int link_id
+#endif
+	, u8 keyid
 #if (LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 37)) || defined(COMPAT_KERNEL_RELEASE)
-	u8 key_index, bool pairwise, const u8 *mac_addr,
-#else	/* (LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 37)) */
-	u8 key_index, const u8 *mac_addr,
-#endif /* (LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 37)) */
-	void *cookie,
-	void (*callback)(void *cookie, struct key_params *))
+	, bool pairwise
+#endif
+	, const u8 *mac_addr, void *cookie
+	, void (*callback)(void *cookie, struct key_params *))
 {
 #if 0
 	struct iwm_priv *iwm = ndev_to_iwm(ndev);
@@ -1555,6 +1563,9 @@ static int cfg80211_rtw_get_key(struct wiphy *wiphy, struct net_device *ndev,
 
 static int cfg80211_rtw_del_key(struct wiphy *wiphy, struct net_device *ndev,
 #if (LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 37)) || defined(COMPAT_KERNEL_RELEASE)
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 1, 0)
+				int link_id,
+#endif
 				u8 key_index, bool pairwise, const u8 *mac_addr)
 #else	/* (LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 37)) */
 				u8 key_index, const u8 *mac_addr)
@@ -1574,7 +1585,11 @@ static int cfg80211_rtw_del_key(struct wiphy *wiphy, struct net_device *ndev,
 }
 
 static int cfg80211_rtw_set_default_key(struct wiphy *wiphy,
-	struct net_device *ndev, u8 key_index
+	struct net_device *ndev,
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 1, 0)
+	int link_id,
+#endif
+	 u8 key_index
 	#if (LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 38)) || defined(COMPAT_KERNEL_RELEASE)
 	, bool unicast, bool multicast
 	#endif
