@@ -1402,13 +1402,7 @@ int rtw_os_ndev_register(_adapter *adapter, const char *name)
 
 	/* Tell the network stack we exist */
 
-	#if (LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 26))
-	if (!rtnl_is_locked())
-		ret = (register_netdev(ndev) == 0) ? _SUCCESS : _FAIL;
-	else
-	#endif
-		ret = (register_netdevice(ndev) == 0) ? _SUCCESS : _FAIL;
-
+	ret = (register_netdev(ndev) == 0) ? _SUCCESS : _FAIL;
 	if (ret == _SUCCESS)
 		adapter->registered = 1;
 	else
@@ -1447,14 +1441,8 @@ void rtw_os_ndev_unregister(_adapter *adapter)
 	rtw_cfg80211_ndev_res_unregister(adapter);
 #endif
 
-	if ((adapter->DriverState != DRIVER_DISAPPEAR) && netdev) {
-		#if (LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 26))
-		if (!rtnl_is_locked())
-			unregister_netdev(netdev);
-		else
-		#endif
-			unregister_netdevice(netdev);
-	}
+	if ((adapter->DriverState != DRIVER_DISAPPEAR) && netdev)
+		unregister_netdev(netdev);
 
 #if defined(CONFIG_IOCTL_CFG80211) && !defined(RTW_SINGLE_WIPHY)
 	rtw_wiphy_unregister(adapter_to_wiphy(adapter));
