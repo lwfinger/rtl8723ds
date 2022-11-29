@@ -1516,10 +1516,6 @@ RETURN:
 	return;
 }
 
-/*
-* Jeff: this function should be called under ioctl (rtnl_lock is accquired) while
-* LINUX_VERSION_CODE < KERNEL_VERSION(2, 6, 26)
-*/
 int rtw_change_ifname(_adapter *padapter, const char *ifname)
 {
 	struct net_device *pnetdev;
@@ -1539,12 +1535,7 @@ int rtw_change_ifname(_adapter *padapter, const char *ifname)
 		rereg_priv->old_pnetdev = NULL;
 	}
 
-#if (LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 26))
-	if (!rtnl_is_locked())
-		unregister_netdev(cur_pnetdev);
-	else
-#endif
-		unregister_netdevice(cur_pnetdev);
+	unregister_netdevice(cur_pnetdev);
 
 	rereg_priv->old_pnetdev = cur_pnetdev;
 
@@ -1564,12 +1555,7 @@ int rtw_change_ifname(_adapter *padapter, const char *ifname)
 	dev_addr_set(pnetdev, adapter_mac_addr(padapter));
 #endif
 
-#if (LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 26))
-	if (!rtnl_is_locked())
-		ret = register_netdev(pnetdev);
-	else
-#endif
-		ret = register_netdevice(pnetdev);
+	ret = register_netdevice(pnetdev);
 
 	if (ret != 0) {
 		goto error;
