@@ -4444,10 +4444,10 @@ void rx_query_phy_status(
 		&& _rtw_memcmp(get_hdr_bssid(wlanhdr), get_bssid(&padapter->mlmepriv), ETH_ALEN);
 
 	pkt_info.bToSelf = (!pattrib->icv_err) && (!pattrib->crc_err)
-		&& _rtw_memcmp(get_ra(wlanhdr), adapter_mac_addr(padapter), ETH_ALEN);
+		&& _rtw_memcmp(wifi_get_ra(wlanhdr), adapter_mac_addr(padapter), ETH_ALEN);
 
 	pkt_info.bPacketToSelf = pkt_info.bPacketMatchBSSID
-		&& _rtw_memcmp(get_ra(wlanhdr), adapter_mac_addr(padapter), ETH_ALEN);
+		&& _rtw_memcmp(wifi_get_ra(wlanhdr), adapter_mac_addr(padapter), ETH_ALEN);
 
 	pkt_info.bPacketBeacon = pkt_info.bPacketMatchBSSID
 				 && (GetFrameSubType(wlanhdr) == WIFI_BEACON);
@@ -4549,7 +4549,7 @@ s32 pre_recv_entry(union recv_frame *precvframe, u8 *pphy_status)
 	_adapter *iface = NULL;
 	_adapter *primary_padapter = precvframe->u.hdr.adapter;
 
-	pda = get_ra(pbuf);
+	pda = wifi_get_ra(pbuf);
 
 	if (IS_MCAST(pda) == _FALSE) { /*unicast packets*/
 		iface = rtw_get_iface_by_macddr(primary_padapter , pda);
