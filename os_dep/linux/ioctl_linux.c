@@ -2209,16 +2209,6 @@ static int rtw_wx_set_wap(struct net_device *dev,
 	struct	wlan_network	*pnetwork = NULL;
 	NDIS_802_11_AUTHENTICATION_MODE	authmode;
 
-	/*
-	#ifdef CONFIG_CONCURRENT_MODE
-		if(padapter->adapter_type > PRIMARY_IFACE)
-		{
-			ret = -EINVAL;
-			goto exit;
-		}
-	#endif
-	*/
-
 #ifdef CONFIG_CONCURRENT_MODE
 	if (rtw_mi_buddy_check_fwstate(padapter, _FW_UNDER_SURVEY | _FW_UNDER_LINKING) == _TRUE) {
 		RTW_INFO("set bssid, but buddy_intf is under scanning or linking\n");
@@ -2301,7 +2291,9 @@ static int rtw_wx_set_wap(struct net_device *dev,
 cancel_ps_deny:
 	rtw_ps_deny_cancel(padapter, PS_DENY_JOIN);
 
+#ifdef CONFIG_CONCURRENT_MODE
 exit:
+#endif
 	return ret;
 }
 
@@ -5358,7 +5350,6 @@ static int rtw_p2p_connect(struct net_device *dev,
 #endif /* CONFIG_INTEL_WIDI */
 		ret = -1;
 	}
-exit:
 	return ret;
 }
 
@@ -5587,10 +5578,7 @@ static int rtw_p2p_set_persistent(struct net_device *dev,
 	}
 	printk("[%s] persistent_supported = %d\n", __FUNCTION__, pwdinfo->persistent_supported);
 
-exit:
-
 	return ret;
-
 }
 
 static int hexstr2bin(const char *hex, u8 *buf, size_t len)
@@ -5776,10 +5764,7 @@ static int rtw_p2p_set_pc(struct net_device *dev,
 	} else
 		RTW_INFO("[%s] NOT Found in the Scanning Queue!\n", __FUNCTION__);
 
-exit:
-
 	return ret;
-
 }
 
 static int rtw_p2p_set_wfd_device_type(struct net_device *dev,
@@ -5805,10 +5790,7 @@ static int rtw_p2p_set_wfd_device_type(struct net_device *dev,
 	else					/*	Set to Miracast sink device. */
 		pwfd_info->wfd_device_type = WFD_DEVINFO_PSINK;
 
-exit:
-
 	return ret;
-
 }
 
 static int rtw_p2p_set_wfd_enable(struct net_device *dev,
@@ -5881,8 +5863,6 @@ static int rtw_p2p_set_sa(struct net_device *dev,
 			pwdinfo->session_available = _FALSE;
 	}
 	printk("[%s] session available = %d\n", __FUNCTION__, pwdinfo->session_available);
-
-exit:
 
 	return ret;
 
@@ -9586,8 +9566,11 @@ static int rtw_mp_efuse_set(struct net_device *dev,
 	pHalData = GET_HAL_DATA(padapter);
 	pEfuseHal = &pHalData->EfuseHal;
 	pHalFunc = &padapter->HalFunc;
+#ifdef CONFIG_MP_INCLUDED
 	pmp_priv = &padapter->mppriv;
-
+#else
+	pmp_priv = NULL;
+#endif
 	err = 0;
 
 	if (copy_from_user(extra, wrqu->pointer, wrqu->length))
@@ -10784,7 +10767,7 @@ static int rtw_priv_get(struct net_device *dev,
 #endif		
 		return 0;
 	}
-
+#if defined(CONFIG_RTL8723B) || defined(CONFIG_SDIO_INDIRECT_ACCESS) || defined(CONFIG_APPEND_VENDOR_IE_ENABLE)
 	switch (subcmd) {
 #if defined(CONFIG_RTL8723B)
 	case MP_SetBT:
@@ -10809,6 +10792,7 @@ static int rtw_priv_get(struct net_device *dev,
 	default:
 		return -EIO;
 	}
+#endif
 
 	rtw_msleep_os(10); /* delay 5ms for sending pkt before exit adb shell operation */
 	return 0;
@@ -11510,8 +11494,8 @@ static int rtw_tdls_getsta(struct net_device *dev,
 	}
 	wrqu->data.length = strlen(extra);
 
-#endif /* CONFIG_TDLS */
 exit:
+#endif /* CONFIG_TDLS */
 	return ret;
 
 }

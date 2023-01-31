@@ -2311,10 +2311,7 @@ u8 rtw_tdls_cmd(_adapter *padapter, u8 *addr, u8 option)
 
 	u8	res = _SUCCESS;
 
-
 #ifdef CONFIG_TDLS
-
-
 	pcmdobj = (struct	cmd_obj *)rtw_zmalloc(sizeof(struct	cmd_obj));
 	if (pcmdobj == NULL) {
 		res = _FAIL;
@@ -2336,12 +2333,8 @@ u8 rtw_tdls_cmd(_adapter *padapter, u8 *addr, u8 option)
 	init_h2fwcmd_w_parm_no_rsp(pcmdobj, TDLSoption, GEN_CMD_CODE(_TDLS));
 	res = rtw_enqueue_cmd(pcmdpriv, pcmdobj);
 
-#endif /* CONFIG_TDLS */
-
 exit:
-
-
-
+#endif /* CONFIG_TDLS */
 	return res;
 }
 
@@ -4565,7 +4558,6 @@ void rtw_create_ibss_post_hdl(_adapter *padapter, int status)
 
 createbss_cmd_fail:
 	_exit_critical_bh(&pmlmepriv->lock, &irqL);
-exit:
 	return;
 }
 

@@ -101,13 +101,9 @@ SwLedBlink(
 			_set_timer(&(pLed->BlinkTimer), LED_BLINK_SLOWLY_INTERVAL);
 			break;
 
-		case LED_BLINK_WPS: {
-			if (pLed->BlinkingLedState == RTW_LED_ON)
-				_set_timer(&(pLed->BlinkTimer), LED_BLINK_LONG_INTERVAL);
-			else
-				_set_timer(&(pLed->BlinkTimer), LED_BLINK_LONG_INTERVAL);
-		}
-		break;
+		case LED_BLINK_WPS:
+			_set_timer(&(pLed->BlinkTimer), LED_BLINK_LONG_INTERVAL);
+			break;
 
 		default:
 			_set_timer(&(pLed->BlinkTimer), LED_BLINK_SLOWLY_INTERVAL);

@@ -868,10 +868,7 @@ PHY_SetTxPowerLevel8723D(
 #endif
 		RFPath = pHalData->ant_path;
 
-
-
-	PHY_SetTxPowerLevelByPath(Adapter, Channel, RFPath);
-
+		PHY_SetTxPowerLevelByPath(Adapter, Channel, RFPath);
 }
 
 VOID

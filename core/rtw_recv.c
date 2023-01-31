@@ -3106,8 +3106,6 @@ int recv_indicatepkt_reorder(_adapter *padapter, union recv_frame *prframe)
 
 			return retval;
 		}
-	} else {
-
 	}
 
 	_enter_critical_bh(&ppending_recvframe_queue->lock, &irql);
@@ -3124,15 +3122,7 @@ int recv_indicatepkt_reorder(_adapter *padapter, union recv_frame *prframe)
 #ifdef DBG_RX_DROP_FRAME
 		RTW_INFO("DBG_RX_DROP_FRAME %s check_indicate_seq fail\n", __FUNCTION__);
 #endif
-#if 0
-		rtw_recv_indicatepkt(padapter, prframe);
-
-		_exit_critical_bh(&ppending_recvframe_queue->lock, &irql);
-
-		goto _success_exit;
-#else
 		goto _err_exit;
-#endif
 	}
 
 
@@ -3170,14 +3160,9 @@ int recv_indicatepkt_reorder(_adapter *padapter, union recv_frame *prframe)
 		_exit_critical_bh(&ppending_recvframe_queue->lock, &irql);
 		_cancel_timer_ex(&preorder_ctrl->reordering_ctrl_timer);
 	}
-
-
-_success_exit:
-
 	return _SUCCESS;
 
 _err_exit:
-
 	_exit_critical_bh(&ppending_recvframe_queue->lock, &irql);
 
 	return _FAIL;
@@ -4078,7 +4063,9 @@ int recv_func_posthandle(_adapter *padapter, union recv_frame *prframe)
 	}
 #endif /* CONFIG_80211N_HT */
 
+#ifdef CONFIG_TDLS
 _exit_recv_func:
+#endif
 	return ret;
 
 _recv_data_drop:

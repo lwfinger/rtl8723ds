@@ -899,10 +899,7 @@ ssize_t proc_set_macaddr_acl(struct file *file, const char __user *buffer, size_
 
 			c = strsep(&next, " \t");
 		}
-
 	}
-
-exit:
 	return count;
 }
 #endif /* CONFIG_RTW_MACADDR_ACL */

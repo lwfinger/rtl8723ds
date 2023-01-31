@@ -465,7 +465,6 @@ s32 rtl8723ds_xmit_handler(PADAPTER padapter)
 
 	pxmitpriv = &padapter->xmitpriv;
 
-wait:
 	ret = _rtw_down_sema(&pxmitpriv->SdioXmitSema);
 	if (_FAIL == ret) {
 		RTW_ERR("%s: down sema fail!\n", __func__);

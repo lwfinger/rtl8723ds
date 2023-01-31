@@ -718,7 +718,6 @@ struct wlan_network *_rtw_find_same_network(_queue *scanned_queue, struct wlan_n
 
 	if (plist == phead)
 		found = NULL;
-exit:
 	return found;
 }
 
@@ -2441,7 +2440,7 @@ static void rtw_sta_mstatus_disc_rpt(_adapter *adapter, u8 mac_id)
 
 	RTW_INFO("%s "ADPT_FMT" - mac_id=%d\n", __func__, ADPT_ARG(adapter), mac_id);
 
-	if (mac_id >= 0 && mac_id < macid_ctl->num) {
+	if (mac_id < macid_ctl->num) {
 		rtw_hal_set_FwMediaStatusRpt_single_cmd(adapter, 0, 0, 0, 0, mac_id);
 		/*
 		 * For safety, prevent from keeping macid sleep.
@@ -2784,7 +2783,6 @@ void rtw_mlme_reset_auto_scan_int(_adapter *adapter, u8 *reason)
 		*reason |= RTW_AUTO_SCAN_REASON_2040_BSS;
 	}
 
-exit:
 	if (interval_ms == 0xffffffff)
 		interval_ms = 0;
 

@@ -904,9 +904,7 @@ void rtw_sleep_schedulable(int ms)
 		delta = 1;/* 1 ms */
 	}
 	set_current_state(TASK_INTERRUPTIBLE);
-	if (schedule_timeout(delta) != 0)
-		return ;
-	return;
+	schedule_timeout(delta);
 }
 
 

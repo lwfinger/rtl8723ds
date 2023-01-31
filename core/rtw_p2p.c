@@ -2388,13 +2388,13 @@ u32 process_assoc_req_p2p_ie(struct wifidirect_info *pwdinfo, u8 *pframe, uint l
 				if (num_of_secdev_type == 0)
 					psta->num_of_secdev_type = 0;
 				else {
-					u32 len;
+					u32 lena;
 
 					psta->num_of_secdev_type = num_of_secdev_type;
 
-					len = (sizeof(psta->secdev_types_list) < (num_of_secdev_type * 8)) ? (sizeof(psta->secdev_types_list)) : (num_of_secdev_type * 8);
+					lena = (sizeof(psta->secdev_types_list) < (num_of_secdev_type * 8)) ? (sizeof(psta->secdev_types_list)) : (num_of_secdev_type * 8);
 
-					_rtw_memcpy(psta->secdev_types_list, pattr_content, len);
+					_rtw_memcpy(psta->secdev_types_list, pattr_content, lena);
 
 					pattr_content += (num_of_secdev_type * 8);
 				}

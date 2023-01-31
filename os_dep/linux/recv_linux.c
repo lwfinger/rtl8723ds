@@ -761,21 +761,11 @@ int rtw_recv_indicatepkt(_adapter *padapter, union recv_frame *precv_frame)
 		RTW_PRINT("recv eapol packet\n");
 
 #ifdef CONFIG_AUTO_AP_MODE
-#if 1 /* for testing */
-#if 1
 	if (0x8899 == pattrib->eth_type) {
 		rtw_os_ksocket_send(padapter, precv_frame);
 
 		/* goto _recv_indicatepkt_drop; */
 	}
-#else
-	if (0x8899 == pattrib->eth_type) {
-		rtw_auto_ap_mode_rx(padapter, precv_frame);
-
-		goto _recv_indicatepkt_end;
-	}
-#endif
-#endif
 #endif /* CONFIG_AUTO_AP_MODE */
 
 	/* TODO: move to core */
@@ -825,8 +815,6 @@ bypass_session_tracker:
 	}
 
 	rtw_os_recv_indicate_pkt(padapter, skb, pattrib);
-
-_recv_indicatepkt_end:
 
 	precv_frame->u.hdr.pkt = NULL; /* pointers to NULL before rtw_free_recvframe() */
 

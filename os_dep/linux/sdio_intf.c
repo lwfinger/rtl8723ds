@@ -304,8 +304,6 @@ static u32 sdio_init(struct dvobj_priv *dvobj)
 release:
 	sdio_release_host(func);
 
-exit:
-
 	if (err)
 		return _FAIL;
 	return _SUCCESS;
@@ -817,13 +815,8 @@ static int rtw_drv_init(
 		rtw_signal_process(ui_pid[1], SIGUSR2);
 	}
 #endif
-
-
 	status = _SUCCESS;
 
-os_ndevs_deinit:
-	if (status != _SUCCESS)
-		rtw_os_ndevs_deinit(dvobj);
 free_if_vir:
 	if (status != _SUCCESS) {
 		#ifdef CONFIG_CONCURRENT_MODE
@@ -914,7 +907,7 @@ static int rtw_sdio_suspend(struct device *dev)
 	int ret = 0;
 	u8 ch, bw, offset;
 
-	if (psdpriv == NULL)
+	if (!func || !psdpriv)
 		goto exit;
 
 	if (psdpriv->processing_dev_remove == _TRUE) {
@@ -946,20 +939,20 @@ exit:
 	/* this is sprd's bug in Android 4.0, but sprd don't */
 	/* want to fix it. */
 	/* we have test power under 8723as, power consumption is ok */
-	if (func) {
-		mmc_pm_flag_t pm_flag = 0;
-		pm_flag = sdio_get_host_pm_caps(func);
-		RTW_INFO("cmd: %s: suspend: PM flag = 0x%x\n", sdio_func_id(func), pm_flag);
-		if (!(pm_flag & MMC_PM_KEEP_POWER)) {
-			RTW_INFO("%s: cannot remain alive while host is suspended\n", sdio_func_id(func));
-			if (pdbgpriv)
-				pdbgpriv->dbg_suspend_error_cnt++;
-			return -ENOSYS;
-		} else {
-			RTW_INFO("cmd: suspend with MMC_PM_KEEP_POWER\n");
-			sdio_set_host_pm_flags(func, MMC_PM_KEEP_POWER);
-		}
+{
+	unsigned pm_flag = 0;
+	pm_flag = sdio_get_host_pm_caps(func);
+	RTW_INFO("cmd: %s: suspend: PM flag = 0x%x\n", sdio_func_id(func), pm_flag);
+	if (!(pm_flag & MMC_PM_KEEP_POWER)) {
+		RTW_INFO("%s: cannot remain alive while host is suspended\n", sdio_func_id(func));
+		if (pdbgpriv)
+			pdbgpriv->dbg_suspend_error_cnt++;
+		return -ENOSYS;
+	} else {
+		RTW_INFO("cmd: suspend with MMC_PM_KEEP_POWER\n");
+		sdio_set_host_pm_flags(func, MMC_PM_KEEP_POWER);
 	}
+}
 #endif
 #endif
 	return ret;

@@ -396,8 +396,8 @@ s32	rtw_hal_mgnt_xmit(_adapter *padapter, struct xmit_frame *pmgntframe)
 		RTW_INFO("encrypt=%d, bswenc=%d\n", pmgntframe->attrib.encrypt, pmgntframe->attrib.bswenc);
 		rtw_mgmt_xmitframe_coalesce(padapter, pmgntframe->pkt, pmgntframe);
 	}
-#endif /* CONFIG_IEEE80211W */
 no_mgmt_coalesce:
+#endif /* CONFIG_IEEE80211W */
 	ret = padapter->HalFunc.mgnt_xmit(padapter, pmgntframe);
 	return ret;
 }
@@ -811,7 +811,7 @@ s32 c2h_handler(_adapter *adapter, u8 id, u8 seq, u8 plen, u8 *payload)
 
 	case C2H_EXTEND:
 		sub_id = payload[0];
-		__attribute__((__fallthrough__));
+		{__attribute__((__fallthrough__));}
 		/* no handle, goto default */
 
 	default:
@@ -820,7 +820,6 @@ s32 c2h_handler(_adapter *adapter, u8 id, u8 seq, u8 plen, u8 *payload)
 		break;
 	}
 
-exit:
 	if (ret != _SUCCESS) {
 		if (id == C2H_EXTEND)
 			RTW_WARN("%s: unknown C2H(0x%02x, 0x%02x)\n", __func__, id, sub_id);

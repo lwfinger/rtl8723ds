@@ -1929,12 +1929,12 @@ int rtw_check_beacon_data(_adapter *padapter, u8 *pbuf,  int len)
 #endif /* CONFIG_80211AC_VHT */
 
 	if(pbss_network->Configuration.DSConfig <= 14 && padapter->registrypriv.wifi_spec == 1) {
-		uint len = 0;
+		uint lena = 0;
 #ifdef CONFIG_80211N_HT
 		SET_EXT_CAPABILITY_ELE_BSS_COEXIST(pmlmepriv->ext_capab_ie_data, 1);
 #endif /* CONFIG_80211N_HT */
 		pmlmepriv->ext_capab_ie_len = 10;
-		rtw_set_ie(pbss_network->IEs + pbss_network->IELength, EID_EXTCapability, 8, pmlmepriv->ext_capab_ie_data, &len);
+		rtw_set_ie(pbss_network->IEs + pbss_network->IELength, EID_EXTCapability, 8, pmlmepriv->ext_capab_ie_data, &lena);
 		pbss_network->IELength += pmlmepriv->ext_capab_ie_len;
 	}
 
@@ -3904,7 +3904,9 @@ bool rtw_ap_chbw_decision(_adapter *adapter, s16 req_ch, s8 req_bw, s8 req_offse
 		if (rtw_chset_is_ch_non_ocp(mlmeext->channel_set, dec_ch, dec_bw, dec_offset) == _FALSE)
 			goto update_bss_chbw;
 
+#if defined(CONFIG_DFS_MASTER)
 choose_chbw:
+#endif
 		if (req_bw < 0)
 			req_bw = cur_ie_bw;
 

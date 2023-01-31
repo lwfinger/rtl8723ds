@@ -4312,7 +4312,7 @@ int rtw_resume_common(_adapter *padapter)
 	struct mlme_priv *pmlmepriv = &padapter->mlmepriv;
 
 
-	if (pwrpriv->bInSuspend == _FALSE)
+	if (!pwrpriv || pwrpriv->bInSuspend == _FALSE)
 		return 0;
 
 	RTW_PRINT("resume start\n");
@@ -4334,12 +4334,10 @@ int rtw_resume_common(_adapter *padapter)
 #endif /* CONFIG_AP_WOWLAN */
 	}
 
-	if (pwrpriv) {
-		pwrpriv->bInSuspend = _FALSE;
+	pwrpriv->bInSuspend = _FALSE;
 #ifdef CONFIG_WOWLAN
-		pwrpriv->wowlan_in_resume = _FALSE;
+	pwrpriv->wowlan_in_resume = _FALSE;
 #endif
-	}
 	RTW_PRINT("%s:%d in %d ms\n", __FUNCTION__ , ret,
 		  rtw_get_passing_time_ms(start_time));
 

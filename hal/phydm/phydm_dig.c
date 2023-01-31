@@ -805,16 +805,8 @@ odm_DIGInit(
 	pDM_DigTable->pause_cckpd_level = 0;
 #endif
 
-	if(pDM_Odm->BoardType & (ODM_BOARD_EXT_PA|ODM_BOARD_EXT_LNA))
-	{
-		pDM_DigTable->rx_gain_range_max = DM_DIG_MAX_NIC;
-		pDM_DigTable->rx_gain_range_min = DM_DIG_MIN_NIC;
-	}
-	else
-	{
-		pDM_DigTable->rx_gain_range_max = DM_DIG_MAX_NIC;
-		pDM_DigTable->rx_gain_range_min = DM_DIG_MIN_NIC;
-	}
+	pDM_DigTable->rx_gain_range_max = DM_DIG_MAX_NIC;
+	pDM_DigTable->rx_gain_range_min = DM_DIG_MIN_NIC;
 
 #if (RTL8822B_SUPPORT == 1 || RTL8197F_SUPPORT == 1)
 	pDM_DigTable->enableAdjustBigJump = 1;

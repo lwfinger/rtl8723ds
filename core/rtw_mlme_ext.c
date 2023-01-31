@@ -1465,7 +1465,9 @@ void mgt_dispatcher(_adapter *padapter, union recv_frame *precv_frame)
 			ptable->func = &OnAuth;
 		else
 			ptable->func = &OnAuthClient;
+{
 		__attribute__ ((__fallthrough__));/* FALL THRU */
+}
 	case WIFI_ASSOCREQ:
 	case WIFI_REASSOCREQ:
 		_mgt_dispatcher(padapter, ptable, precv_frame);
@@ -13977,7 +13979,9 @@ void survey_done_set_ch_bw(_adapter *padapter)
 					FUNC_ADPT_ARG(padapter), cur_channel, cur_bwmode, cur_ch_offset);
 		}
 	}
+#ifdef CONFIG_MCC_MODE
 exit:
+#endif
 	set_channel_bwmode(padapter, cur_channel, cur_ch_offset, cur_bwmode);
 }
 

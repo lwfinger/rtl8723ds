@@ -1413,7 +1413,7 @@ phy_PathA_IQK_8192C(
 	
 	// delay x ms
 	RTPRINT(FINIT, INIT_IQK, ("Delay %d ms for One shot, path A LOK & IQK.\n", IQK_DELAY_TIME));
-	PlatformStallExecution(IQK_DELAY_TIME*1000);
+	rtw_udelay_os(IQK_DELAY_TIME*1000);
 
 	// Check failed
 	regEAC = PHY_QueryBBReg(pAdapter, rRx_Power_After_IQK_A_2, bMaskDWord);
@@ -1460,7 +1460,7 @@ phy_PathB_IQK_8192C(
 
 	// delay x ms
 	RTPRINT(FINIT, INIT_IQK, ("Delay %d ms for One shot, path B LOK & IQK.\n", IQK_DELAY_TIME));
-	PlatformStallExecution(IQK_DELAY_TIME*1000);
+	rtw_udelay_os(IQK_DELAY_TIME*1000);
 
 	// Check failed
 	regEAC = PHY_QueryBBReg(pAdapter, rRx_Power_After_IQK_A_2, bMaskDWord);

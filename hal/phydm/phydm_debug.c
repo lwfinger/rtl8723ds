@@ -605,7 +605,6 @@ phydm_BB_Debug_Info(
 
 	value32 = ODM_GetBBReg(pDM_Odm, 0xf2c , bMaskDWord);  /*HT SIG*/
 	if (RX_HT == 1) {
-
 		HMCSS = (u1Byte)(value32 & 0x7F);
 		HRX_BW = (u1Byte)(value32 & 0x80);
 		HLength = (u2Byte)((value32 >> 8) & 0xffff);
@@ -1740,7 +1739,7 @@ phydm_cmd_parser(
 	u4Byte used = 0;
 	u1Byte id = 0;
 	int var1[10] = {0};
-	int i, input_idx = 0, phydm_ary_size;
+	int i, input_idx = 0, phydm_ary_size = 0;
 	char help[] = "-h";
 
 	if (flag == 0) {
@@ -1802,12 +1801,10 @@ phydm_cmd_parser(
 	case PHYDM_RA:
 
 		for (i = 0; i < 5; i++) {
-			if (input[i + 1]) {
-				PHYDM_SSCANF(input[i + 1], DCMD_DECIMAL, &var1[i]);
+			PHYDM_SSCANF(input[i + 1], DCMD_DECIMAL, &var1[i]);
 
-				/*PHYDM_SNPRINTF((output + used, out_len - used, "new SET, RA_var[%d]= (( %d ))\n", i , var1[i]));*/
-				input_idx++;
-			}
+			/*PHYDM_SNPRINTF((output + used, out_len - used, "new SET, RA_var[%d]= (( %d ))\n", i , var1[i]));*/
+			input_idx++;
 		}
 
 		if (input_idx >= 1) {
@@ -1825,12 +1822,10 @@ phydm_cmd_parser(
 	case PHYDM_ANTDIV:
 
 		for (i = 0; i < 5; i++) {
-			if (input[i + 1]) {
-				PHYDM_SSCANF(input[i + 1], DCMD_HEX, &var1[i]);
+			PHYDM_SSCANF(input[i + 1], DCMD_HEX, &var1[i]);
 
-				/*PHYDM_SNPRINTF((output+used, out_len-used, "new SET, PATHDIV_var[%d]= (( %d ))\n", i , var1[i]));*/
-				input_idx++;
-			}
+			/*PHYDM_SNPRINTF((output+used, out_len-used, "new SET, PATHDIV_var[%d]= (( %d ))\n", i , var1[i]));*/
+			input_idx++;
 		}
 
 		if (input_idx >= 1) {
@@ -1845,12 +1840,10 @@ phydm_cmd_parser(
 	case PHYDM_PATHDIV:
 
 		for (i = 0; i < 5; i++) {
-			if (input[i + 1]) {
-				PHYDM_SSCANF(input[i + 1], DCMD_HEX, &var1[i]);
+			PHYDM_SSCANF(input[i + 1], DCMD_HEX, &var1[i]);
 
-				/*PHYDM_SNPRINTF((output+used, out_len-used, "new SET, PATHDIV_var[%d]= (( %d ))\n", i , var1[i]));*/
-				input_idx++;
-			}
+			/*PHYDM_SNPRINTF((output+used, out_len-used, "new SET, PATHDIV_var[%d]= (( %d ))\n", i , var1[i]));*/
+			input_idx++;
 		}
 
 		if (input_idx >= 1) {
@@ -1865,12 +1858,10 @@ phydm_cmd_parser(
 	case PHYDM_DEBUG:
 
 		for (i = 0; i < 5; i++) {
-			if (input[i + 1]) {
-				PHYDM_SSCANF(input[i + 1], DCMD_DECIMAL, &var1[i]);
+			PHYDM_SSCANF(input[i + 1], DCMD_DECIMAL, &var1[i]);
 
-				/*PHYDM_SNPRINTF((output+used, out_len-used, "new SET, Debug_var[%d]= (( %d ))\n", i , var1[i]));*/
-				input_idx++;
-			}
+			/*PHYDM_SNPRINTF((output+used, out_len-used, "new SET, Debug_var[%d]= (( %d ))\n", i , var1[i]));*/
+			input_idx++;
 		}
 
 		if (input_idx >= 1) {
@@ -1884,10 +1875,8 @@ phydm_cmd_parser(
 	case PHYDM_FW_DEBUG:
 
 		for (i = 0; i < 5; i++) {
-			if (input[i + 1]) {
-				PHYDM_SSCANF(input[i + 1], DCMD_DECIMAL, &var1[i]);
-				input_idx++;
-			}
+			PHYDM_SSCANF(input[i + 1], DCMD_DECIMAL, &var1[i]);
+			input_idx++;
 		}
 
 		if (input_idx >= 1) 
@@ -1898,12 +1887,10 @@ phydm_cmd_parser(
 	case PHYDM_SUPPORT_ABILITY:
 
 		for (i = 0; i < 5; i++) {
-			if (input[i + 1]) {
-				PHYDM_SSCANF(input[i + 1], DCMD_DECIMAL, &var1[i]);
+			PHYDM_SSCANF(input[i + 1], DCMD_DECIMAL, &var1[i]);
 
-				/*PHYDM_SNPRINTF((output+used, out_len-used, "new SET, support ablity_var[%d]= (( %d ))\n", i , var1[i]));*/
-				input_idx++;
-			}
+			/*PHYDM_SNPRINTF((output+used, out_len-used, "new SET, support ablity_var[%d]= (( %d ))\n", i , var1[i]));*/
+			input_idx++;
 		}
 
 		if (input_idx >= 1) {
@@ -1916,10 +1903,8 @@ phydm_cmd_parser(
 	case PHYDM_SMART_ANT:
 
 		for (i = 0; i < 5; i++) {
-			if (input[i + 1]) {
-				PHYDM_SSCANF(input[i + 1], DCMD_HEX, &var1[i]);
-				input_idx++;
-			}
+			PHYDM_SSCANF(input[i + 1], DCMD_HEX, &var1[i]);
+			input_idx++;
 		}
 
 		if (input_idx >= 1) {
@@ -1939,10 +1924,8 @@ phydm_cmd_parser(
 			BOOLEAN	bEnableDbgMode;
 			u1Byte central_ch, primary_ch_idx, bandwidth;
 			
-			for (i = 0; i < 4; i++) {
-				if (input[i + 1])
-					PHYDM_SSCANF(input[i + 1], DCMD_DECIMAL, &var1[i]);
-			}
+			for (i = 0; i < 4; i++)
+				PHYDM_SSCANF(input[i + 1], DCMD_DECIMAL, &var1[i]);
 			
 			bEnableDbgMode = (BOOLEAN)var1[0];
 			central_ch = (u1Byte) var1[1];
@@ -1979,10 +1962,8 @@ phydm_cmd_parser(
 		BOOLEAN		bEnableDbgMode;
 		
 		for (i = 0; i < 5; i++) {
-			if (input[i + 1]) {
-				PHYDM_SSCANF(input[i + 1], DCMD_HEX, &var1[i]);
-				input_idx++;
-			}
+			PHYDM_SSCANF(input[i + 1], DCMD_HEX, &var1[i]);
+			input_idx++;
 		}
 		
 		if ((strcmp(input[1], help) == 0)) {
@@ -2007,8 +1988,7 @@ phydm_cmd_parser(
 	case PHYDM_TRX_PATH:
 
 		for (i = 0; i < 4; i++) {
-			if (input[i + 1])
-				PHYDM_SSCANF(input[i + 1], DCMD_DECIMAL, &var1[i]);
+			PHYDM_SSCANF(input[i + 1], DCMD_DECIMAL, &var1[i]);
 		}
 		#if (RTL8822B_SUPPORT == 1 || RTL8197F_SUPPORT == 1)
 		if (pDM_Odm->SupportICType & (ODM_RTL8822B|ODM_RTL8197F)) {
@@ -2045,10 +2025,8 @@ phydm_cmd_parser(
 			u4Byte		DbgPort, TriggerTime_mu_sec;
 			u1Byte		sampling_rate = 0;
 
-			for (i = 0; i < 6; i++) {
-				if (input[i + 1])
-					PHYDM_SSCANF(input[i + 1], DCMD_DECIMAL, &var1[i]);
-			}
+			for (i = 0; i < 6; i++)
+				PHYDM_SSCANF(input[i + 1], DCMD_DECIMAL, &var1[i]);
 
 			bEnableLaMode = (BOOLEAN)var1[0];
 			DbgPrint("echo cmd input_num = %d\n", input_num);
@@ -2073,22 +2051,8 @@ phydm_cmd_parser(
 				bTriggerEdge = (BOOLEAN) var1[7];
 				sampling_rate = var1[8] & 0x7;
 
-				#if 1
 				TriggerTime_unit_num = phydm_la_mode_mac_setting(pDM_Odm, TriggerTime_mu_sec);
 				phydm_la_mode_bb_setting(pDM_Odm, DbgPort, bTriggerEdge, sampling_rate);
-				#else
-				if (pDM_Odm->SupportICType & ODM_IC_11AC_SERIES) {
-					ODM_SetBBReg(pDM_Odm, 0x198C , BIT2|BIT1|BIT0, 7); /*disable dbg clk gating*/
-					ODM_SetBBReg(pDM_Odm, 0x8FC, bMaskDWord, DbgPort);
-					ODM_SetBBReg(pDM_Odm, 0x95C , BIT31, bTriggerEdge); /*0: posedge, 1: negedge*/
-					ODM_SetBBReg(pDM_Odm, 0x95c, 0xe0, sampling_rate);
-				} else {
-					ODM_SetBBReg(pDM_Odm, 0x908, bMaskDWord, DbgPort);
-					ODM_SetBBReg(pDM_Odm, 0x9A0 , BIT31, bTriggerEdge); /*0: posedge, 1: negedge*/
-					ODM_SetBBReg(pDM_Odm, 0x9A0, 0xe0, sampling_rate);
-				}
-				#endif
-
 				pDM_Odm->ADCSmp_dbg_port = DbgPort;
 				pDM_Odm->ADCSmp_trigger_edge = bTriggerEdge;
 				pDM_Odm->ADCsmp_smp_rate = sampling_rate;
@@ -2114,18 +2078,14 @@ phydm_cmd_parser(
 	{
 		u1Byte	type = 0;
 		
-		if (input[1]) {
-			PHYDM_SSCANF(input[1], DCMD_DECIMAL, &var1[0]);
-			type = (u1Byte)var1[0];
-		}
-
+		PHYDM_SSCANF(input[1], DCMD_DECIMAL, &var1[0]);
+		type = (u1Byte)var1[0];
 		if (type == 0)
 			phydm_DumpBbReg(pDM_Odm, &used, output, &out_len);
 		else if (type == 1)
 			phydm_DumpAllReg(pDM_Odm, &used, output, &out_len);
 	}
 		break;
-
 	case PHYDM_MU_MIMO:
 #if (RTL8822B_SUPPORT == 1)
 		
@@ -2236,12 +2196,9 @@ phydm_cmd_parser(
 	break;
 
 	case PHYDM_NBI_EN:
-		
 		for (i = 0; i < 5; i++) {
-			if (input[i + 1]) {
-				PHYDM_SSCANF(input[i + 1], DCMD_DECIMAL, &var1[i]);
-				input_idx++;
-			}
+			PHYDM_SSCANF(input[i + 1], DCMD_DECIMAL, &var1[i]);
+			input_idx++;
 		}
 
 		if (input_idx >= 1) {
@@ -2249,17 +2206,11 @@ phydm_cmd_parser(
 			phydm_api_debug(pDM_Odm, PHYDM_API_NBI, (u4Byte *)var1, &used, output, &out_len);
 			/**/
 		}
-
-
 		break;
-
 	case PHYDM_CSI_MASK_EN:
-		
 		for (i = 0; i < 5; i++) {
-			if (input[i + 1]) {
-				PHYDM_SSCANF(input[i + 1], DCMD_DECIMAL, &var1[i]);
-				input_idx++;
-			}
+			PHYDM_SSCANF(input[i + 1], DCMD_DECIMAL, &var1[i]);
+			input_idx++;
 		}
 
 		if (input_idx >= 1) {
@@ -2277,10 +2228,8 @@ phydm_cmd_parser(
 		u4Byte var[6] = {0};
 
 		for (i = 0; i < 6; i++) {
-			if (input[i + 1]) {
-				PHYDM_SSCANF(input[i + 1], DCMD_HEX, &var[i]);
-				input_idx++;
-			}
+			PHYDM_SSCANF(input[i + 1], DCMD_HEX, &var[i]);
+			input_idx++;
 		}
 	
 		if (input_idx >= 1)
@@ -2352,7 +2301,6 @@ phydm_cmd_parser(
 			phydm_NHMsetting(pDM_Odm, SET_NHM_SETTING);
 
 			for(i = 0; i <= 10; i ++) {
-				
 				if (i == 5) {
 					PHYDM_SNPRINTF((output + used, out_len - used, "\r\n NHM_th[%d] = 0x%x, echo_IGI = 0x%x", i, CCX_INFO->NHM_th[i], CCX_INFO->echo_IGI));
 				}
@@ -2364,12 +2312,10 @@ phydm_cmd_parser(
 
 			//4 4. Trigger NHM
 			phydm_NHMtrigger(pDM_Odm);
-
 		}
 		
 		/*Get NHM results*/
 		else if (var1[0] == 3) {
-
 			IGI = (u1Byte)ODM_GetBBReg(pDM_Odm, 0xC50, bMaskByte0);
 
 			PHYDM_SNPRINTF((output + used, out_len - used, "\r\n Cur_IGI = 0x%x", IGI));			
@@ -2380,7 +2326,6 @@ phydm_cmd_parser(
 			phydm_NHMsetting(pDM_Odm, RESTORE_NHM_SETTING);
 			
 			for(i = 0; i <= 11; i++) {
-				
 				if (i == 5) 			
 					PHYDM_SNPRINTF((output + used, out_len - used, "\r\n nhm_result[%d] = %d, echo_IGI = 0x%x", i, CCX_INFO->NHM_result[i], CCX_INFO->echo_IGI));
 				else if (i == 11)
@@ -2453,7 +2398,7 @@ phydm_cmd_parser(
 		
 		phydm_BB_Debug_Info(pDM_Odm, &used, output, &out_len);
 
-		if (pDM_Odm->SupportICType & ODM_RTL8822B && input[1]) {
+		if (pDM_Odm->SupportICType & ODM_RTL8822B) {
 			PHYDM_SSCANF(input[1], DCMD_DECIMAL, &var1[0]);
 			ODM_SetBBReg(pDM_Odm, 0x1988, 0x003fff00, var1[0]);
 			value32 = ODM_GetBBReg(pDM_Odm, 0xf84, bMaskDWord);
@@ -2487,15 +2432,10 @@ phydm_cmd_parser(
 #endif
 	}
 		break;
-		
 	case PHYDM_PAUSE_DIG_EN:
-		
-
 		for (i = 0; i < 5; i++) {
-			if (input[i + 1]) {
-				PHYDM_SSCANF(input[i + 1], DCMD_HEX, &var1[i]);
-				input_idx++;
-			}
+			PHYDM_SSCANF(input[i + 1], DCMD_HEX, &var1[i]);
+			input_idx++;
 		}
 				
 		if (input_idx >= 1) {
@@ -2508,16 +2448,11 @@ phydm_cmd_parser(
 			} else 
 				PHYDM_SNPRINTF((output + used, out_len - used, "echo  (1:pause, 2resume)  (IGI_value)\n"));
 		}
-		
 		break;
-		
 	case PHYDM_H2C:
-
 		for (i = 0; i < 8; i++) {
-			if (input[i + 1]) {
-				PHYDM_SSCANF(input[i + 1], DCMD_HEX, &var1[i]);
-				input_idx++;
-			}
+			PHYDM_SSCANF(input[i + 1], DCMD_HEX, &var1[i]);
+			input_idx++;
 		}
 
 		if (input_idx >= 1)
@@ -2525,14 +2460,10 @@ phydm_cmd_parser(
 
 		
 		break;
-		
 	case PHYDM_ANT_SWITCH:
-
 		for (i = 0; i < 8; i++) {
-			if (input[i + 1]) {
-				PHYDM_SSCANF(input[i + 1], DCMD_DECIMAL, &var1[i]);
-				input_idx++;
-			}
+			PHYDM_SSCANF(input[i + 1], DCMD_DECIMAL, &var1[i]);
+			input_idx++;
 		}
 
 		if (input_idx >= 1) {
@@ -2543,17 +2474,12 @@ phydm_cmd_parser(
 			PHYDM_SNPRINTF((output + used, out_len - used, "Not Support IC"));
 			#endif
 		}
-
-		
 		break;		
-
 	default:
 		PHYDM_SNPRINTF((output + used, out_len - used, "SET, unknown command!\n"));
 		break;
-
 	}
 }
-
 
 VOID
 phydm_la_mode_bb_setting(

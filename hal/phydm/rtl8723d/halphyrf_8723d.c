@@ -256,7 +256,7 @@ ODM_TxPwrTrackSetPwr_8723D(
 		TxRate = (u1Byte) pMgntInfo->ForcedDataRate;
 	}
 #endif
-#elif (DM_ODM_SUPPORT_TYPE & (ODM_CE))
+#elif (DM_ODM_SUPPORT_TYPE & (ODM_CE) && MP_DRIVER == 1)
 	if (pDM_Odm->mp_mode == TRUE) {	/*CE MP*/
 		PMPT_CONTEXT		pMptCtx = &(Adapter->mppriv.MptCtx);
 
@@ -691,7 +691,7 @@ GetDeltaSwingTable_8723D(
 					
 					TxRate = MptToMgntRate(pMptCtx->MptRateIndex);
 			#endif
-		#elif (DM_ODM_SUPPORT_TYPE & ODM_CE)
+		#elif (DM_ODM_SUPPORT_TYPE & ODM_CE && MP_DRIVER == 1)
 				PMPT_CONTEXT pMptCtx = &(Adapter->mppriv.MptCtx);
 				
 				TxRate = MptToMgntRate(pMptCtx->MptRateIndex);
@@ -1937,7 +1937,7 @@ _PHY_PathADDAOn_8723D(
 #endif
 
 
-	pathOn = isPathAOn ? 0x03c00016 : 0x03c00016;
+	pathOn = 0x03c00016;
 
 	if (FALSE == is2T) {
 		pathOn = 0x03c00016;
@@ -3150,6 +3150,7 @@ PHY_IQCalibrate_8723D(
 
 	/*Check & wait if BT is doing IQK*/
 
+#ifdef CONFIG_MP_INCLUDED
 	if (pDM_Odm->mp_mode == FALSE) {
 #if MP_DRIVER != 1
 		SetFwWiFiCalibrationCmd_8723D(pAdapter, 1);
@@ -3158,7 +3159,7 @@ PHY_IQCalibrate_8723D(
 		count = 0;
 		u1bTmp = PlatformEFIORead1Byte(pAdapter, 0x1e6);
 		while (u1bTmp != 0x1 && count < 1000) {
-			PlatformStallExecution(10);
+			rtw_udelay_os(10);
 			u1bTmp = PlatformEFIORead1Byte(pAdapter, 0x1e6);
 			count++;
 		}
@@ -3169,13 +3170,13 @@ PHY_IQCalibrate_8723D(
 		
 		u1bTmp = PlatformEFIORead1Byte(pAdapter, 0x1e7);
 		while ((!(u1bTmp&BIT0)) && count < 6000) {
-			PlatformStallExecution(50);
+			rtw_udelay_os(50);
 			u1bTmp = PlatformEFIORead1Byte(pAdapter, 0x1e7);
 			count++;
 		}
 #endif
 	}
-
+#endif
 	
 	ODM_RT_TRACE(pDM_Odm,ODM_COMP_CALIBRATION, ODM_DBG_LOUD,  ("IQK:Start!!!\n"));
 	ODM_AcquireSpinLock(pDM_Odm, RT_IQK_SPINLOCK);
@@ -3359,6 +3360,7 @@ PHY_IQCalibrate_8723D(
 	_PHY_SaveADDARegisters_8723D(pDM_Odm, IQK_BB_REG_92C, pDM_Odm->RFCalibrateInfo.IQK_BB_backup_recover, IQK_BB_REG_NUM);
 #endif	
 
+#ifdef CONFIG_MP_INCLUDED
 	if (pDM_Odm->mp_mode == FALSE) {
 #if MP_DRIVER != 1
 		SetFwWiFiCalibrationCmd_8723D(pAdapter, 0);
@@ -3367,7 +3369,7 @@ PHY_IQCalibrate_8723D(
 		count = 0;
 		u1bTmp = PlatformEFIORead1Byte(pAdapter, 0x1e6);
 		while (u1bTmp != 0 && count < 1000) {
-			PlatformStallExecution(10);
+			rtw_udelay_os(10);
 			u1bTmp = PlatformEFIORead1Byte(pAdapter, 0x1e6);
 			count++;
 		}
@@ -3377,6 +3379,7 @@ PHY_IQCalibrate_8723D(
 		}
 #endif
 	}
+#endif
 
 	ODM_AcquireSpinLock(pDM_Odm, RT_IQK_SPINLOCK);
 	pDM_Odm->RFCalibrateInfo.bIQKInProgress = FALSE;
@@ -3476,27 +3479,7 @@ PHY_APCalibrate_8723D(
 	PDM_ODM_T		pDM_Odm = &pHalData->DM_OutSrc;
 	#endif
 #endif	
-#if DISABLE_BB_RF
 	return;
-#endif
-
-	return;
-#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
-	if (!(pDM_Odm->SupportAbility & ODM_RF_CALIBRATION)) {
-		return;
-	}
-#endif	
-
-#if FOR_BRAZIL_PRETEST != 1
-	if (pDM_Odm->RFCalibrateInfo.bAPKdone)
-#endif		
-		return;
-
-#if !(DM_ODM_SUPPORT_TYPE & ODM_AP)
-	phy_APCalibrate_8723D(pAdapter, delta, FALSE);
-#else
-	phy_APCalibrate_8723D(pDM_Odm, delta, FALSE);
-#endif
 }
 
 static VOID phy_SetRFPathSwitch_8723D(

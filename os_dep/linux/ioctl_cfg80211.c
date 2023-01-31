@@ -621,6 +621,10 @@ void rtw_cfg80211_ibss_indicate_connect(_adapter *padapter)
 		WLAN_BSSID_EX  *pnetwork = &(padapter->mlmeextpriv.mlmext_info.network);
 		struct wlan_network *scanned = pmlmepriv->cur_network_scanned;
 
+		if (!scanned) {
+			rtw_warn_on(1);
+			return;
+		}
 		if (check_fwstate(pmlmepriv, WIFI_ADHOC_MASTER_STATE) == _TRUE) {
 
 			_rtw_memcpy(&cur_network->network, pnetwork, sizeof(WLAN_BSSID_EX));
@@ -634,17 +638,10 @@ void rtw_cfg80211_ibss_indicate_connect(_adapter *padapter)
 				return ;
 			}
 		} else {
-			if (scanned == NULL)
-				rtw_warn_on(1);
-
-			if (_rtw_memcmp(&(scanned->network.Ssid), &(pnetwork->Ssid), sizeof(NDIS_802_11_SSID)) == _TRUE
-				&& _rtw_memcmp(scanned->network.MacAddress, pnetwork->MacAddress, sizeof(NDIS_802_11_MAC_ADDRESS)) == _TRUE
-			) {
+			if (_rtw_memcmp(&(scanned->network.Ssid), &(pnetwork->Ssid), sizeof(NDIS_802_11_SSID)) == _TRUE &&
+			    _rtw_memcmp(scanned->network.MacAddress, pnetwork->MacAddress, sizeof(NDIS_802_11_MAC_ADDRESS)) == _TRUE) {
 				if (!rtw_cfg80211_inform_bss(padapter, scanned))
 					RTW_INFO(FUNC_ADPT_FMT" inform fail !!\n", FUNC_ADPT_ARG(padapter));
-				else {
-					/* RTW_INFO(FUNC_ADPT_FMT" inform success !!\n", FUNC_ADPT_ARG(padapter)); */
-				}
 			} else {
 				RTW_INFO("scanned & pnetwork compare fail\n");
 				rtw_warn_on(1);
@@ -1824,7 +1821,7 @@ static int cfg80211_rtw_change_iface(struct wiphy *wiphy,
 	#if defined(CONFIG_P2P) && ((LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 37)) || defined(COMPAT_KERNEL_RELEASE))
 	case NL80211_IFTYPE_P2P_CLIENT:
 		is_p2p = _TRUE;
-        __attribute__((__fallthrough__));
+        {__attribute__((__fallthrough__));}
 	#endif
 	case NL80211_IFTYPE_STATION:
 		networkType = Ndis802_11Infrastructure;
@@ -1849,7 +1846,7 @@ static int cfg80211_rtw_change_iface(struct wiphy *wiphy,
 	#if defined(CONFIG_P2P) && ((LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 37)) || defined(COMPAT_KERNEL_RELEASE))
 	case NL80211_IFTYPE_P2P_GO:
 		is_p2p = _TRUE;
-        __attribute__((__fallthrough__));
+        {__attribute__((__fallthrough__));}
 	#endif
 	case NL80211_IFTYPE_AP:
 		networkType = Ndis802_11APMode;
@@ -2362,10 +2359,8 @@ static int cfg80211_rtw_scan(struct wiphy *wiphy
 
 #ifdef CONFIG_P2P
 	if (pwdinfo->driver_interface == DRIVER_CFG80211) {
-		if (ssids->ssid != NULL
-			&& _rtw_memcmp(ssids->ssid, "DIRECT-", 7)
-			&& rtw_get_p2p_ie((u8 *)request->ie, request->ie_len, NULL, NULL)
-		) {
+		if (_rtw_memcmp(ssids->ssid, "DIRECT-", 7) &&
+		    rtw_get_p2p_ie((u8 *)request->ie, request->ie_len, NULL, NULL)) {
 			if (rtw_p2p_chk_state(pwdinfo, P2P_STATE_NONE))
 				rtw_p2p_enable(padapter, P2P_ROLE_DEVICE);
 			else {
@@ -2514,7 +2509,6 @@ check_need_indicate_scan_done:
 #endif
 	}
 
-cancel_ps_deny:
 	if (ps_denied == _TRUE)
 		rtw_ps_deny_cancel(padapter, PS_DENY_SCAN);
 
@@ -3644,6 +3638,8 @@ static int rtw_cfg80211_monitor_if_xmit_entry(struct sk_buff *skb, struct net_de
 
 	if (skb)
 		rtw_mstat_update(MSTAT_TYPE_SKB, MSTAT_ALLOC_SUCCESS, skb->truesize);
+	else
+		goto fail;
 
 	if (unlikely(skb->len < sizeof(struct ieee80211_radiotap_header)))
 		goto fail;
@@ -4283,9 +4279,9 @@ static int	cfg80211_rtw_add_station(struct wiphy *wiphy, struct net_device *ndev
 			goto exit;
 		}
 	}
+exit:
 #endif /* CONFIG_TDLS */
 
-exit:
 	return ret;
 }
 
@@ -5716,7 +5712,7 @@ static int cfg80211_rtw_mgmt_tx(struct wiphy *wiphy,
 	u32 dump_cnt = 0;
 	bool ack = _TRUE;
 	u8 tx_ch;
-	u8 category, action;
+	u8 category, action = 0;
 	u8 frame_styp;
 	int type = (-1);
 	u32 start = rtw_get_current_time();
@@ -7169,7 +7165,9 @@ int rtw_cfg80211_dev_res_alloc(struct dvobj_priv *dvobj)
 
 	ret = _SUCCESS;
 
+#if defined(RTW_SINGLE_WIPHY)
 exit:
+#endif
 	return ret;
 }
 
@@ -7192,7 +7190,9 @@ int rtw_cfg80211_dev_res_register(struct dvobj_priv *dvobj)
 
 	ret = _SUCCESS;
 
+#if defined(RTW_SINGLE_WIPHY)
 exit:
+#endif
 	return ret;
 }
 

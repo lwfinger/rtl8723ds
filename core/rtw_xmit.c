@@ -463,9 +463,6 @@ void rtw_get_adapter_tx_rate_bmp_by_bw(_adapter *adapter, u8 bw, u16 *r_bmp_cck_
 			bmp_ht |= (macid_ctl->rate_bmp0[i] >> 12) | (macid_ctl->rate_bmp1[i] << 20);
 	}
 
-	/* TODO: mlmeext->tx_rate*/
-
-exit:
 	if (r_bmp_cck_ofdm)
 		*r_bmp_cck_ofdm = bmp_cck_ofdm;
 	if (r_bmp_ht)
@@ -2722,9 +2719,6 @@ static struct xmit_buf *__rtw_alloc_cmd_xmitbuf(struct xmit_priv *pxmitpriv,
 	} else
 		RTW_INFO("%s fail, no xmitbuf available !!!\n", __func__);
 
-exit:
-
-
 	return pxmitbuf;
 }
 
@@ -4407,9 +4401,6 @@ void stop_sta_xmit(_adapter *padapter, struct sta_info *psta)
 	if (!(psta->tdls_sta_state & TDLS_LINKED_STATE))
 #endif /* CONFIG_TDLS */
 		pstapriv->sta_dz_bitmap |= BIT(psta->aid);
-
-
-
 	dequeue_xmitframes_to_sleeping_queue(padapter, psta, &pstaxmitpriv->vo_q.sta_pending);
 	rtw_list_delete(&(pstaxmitpriv->vo_q.tx_pending));
 
@@ -4698,7 +4689,9 @@ void xmit_delivery_enabled_frames(_adapter *padapter, struct sta_info *psta)
 
 	}
 
+#ifdef CONFIG_TDLS
 exit:
+#endif
 	/* _exit_critical_bh(&psta->sleep_q.lock, &irqL);	 */
 	_exit_critical_bh(&pxmitpriv->lock, &irqL);
 

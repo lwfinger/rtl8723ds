@@ -5103,33 +5103,33 @@ static void hw_var_set_mlme_join(PADAPTER padapter, u8 variable, u8 *val)
 		val16 = (RetryLimit << RETRY_LIMIT_SHORT_SHIFT) | (RetryLimit << RETRY_LIMIT_LONG_SHIFT);
 		rtw_write16(padapter, REG_RL, val16);
 #else /* !CONFIG_CONCURRENT_MODE */
-		if (type == 0) { /* prepare to join */
-			/* enable to rx data frame.Accept all data frame */
-			/* rtw_write32(padapter, REG_RCR, rtw_read32(padapter, REG_RCR)|RCR_ADF); */
-			rtw_write16(padapter, REG_RXFLTMAP2, 0xFFFF);
+	if (type == 0) { /* prepare to join */
+		/* enable to rx data frame.Accept all data frame */
+		/* rtw_write32(padapter, REG_RCR, rtw_read32(padapter, REG_RCR)|RCR_ADF); */
+		rtw_write16(padapter, REG_RXFLTMAP2, 0xFFFF);
 
-			val32 = rtw_read32(padapter, REG_RCR);
-			if (padapter->in_cta_test)
-				val32 &= ~(RCR_CBSSID_DATA | RCR_CBSSID_BCN);/* | RCR_ADF */
-			else
-				val32 |= RCR_CBSSID_DATA | RCR_CBSSID_BCN;
-			rtw_write32(padapter, REG_RCR, val32);
+		val32 = rtw_read32(padapter, REG_RCR);
+		if (padapter->in_cta_test)
+			val32 &= ~(RCR_CBSSID_DATA | RCR_CBSSID_BCN);/* | RCR_ADF */
+		else
+			val32 |= RCR_CBSSID_DATA | RCR_CBSSID_BCN;
+		rtw_write32(padapter, REG_RCR, val32);
 
-			if (check_fwstate(pmlmepriv, WIFI_STATION_STATE) == _TRUE)
-				RetryLimit = (pHalData->CustomerID == RT_CID_CCX) ? 7 : 48;
-			else /* Ad-hoc Mode */
-				RetryLimit = 0x7;
-		} else if (type == 1) /* joinbss_event call back when join res < 0 */
-			rtw_write16(padapter, REG_RXFLTMAP2, 0x00);
-		else if (type == 2) { /* sta add event call back */
-			/* enable update TSF */
-			val8 = rtw_read8(padapter, REG_BCN_CTRL);
-			val8 &= ~DIS_TSF_UDT;
-			rtw_write8(padapter, REG_BCN_CTRL, val8);
+		if (check_fwstate(pmlmepriv, WIFI_STATION_STATE) == _TRUE)
+			RetryLimit = (pHalData->CustomerID == RT_CID_CCX) ? 7 : 48;
+		else /* Ad-hoc Mode */
+			RetryLimit = 0x7;
+	} else if (type == 1) /* joinbss_event call back when join res < 0 */
+		rtw_write16(padapter, REG_RXFLTMAP2, 0x00);
+	else if (type == 2) { /* sta add event call back */
+		/* enable update TSF */
+		val8 = rtw_read8(padapter, REG_BCN_CTRL);
+		val8 &= ~DIS_TSF_UDT;
+		rtw_write8(padapter, REG_BCN_CTRL, val8);
 
-			if (check_fwstate(pmlmepriv, WIFI_ADHOC_STATE | WIFI_ADHOC_MASTER_STATE))
-				RetryLimit = 0x7;
-		}
+		if (check_fwstate(pmlmepriv, WIFI_ADHOC_STATE | WIFI_ADHOC_MASTER_STATE))
+			RetryLimit = 0x7;
+	}
 
 	val16 = (RetryLimit << RETRY_LIMIT_SHORT_SHIFT) | (RetryLimit << RETRY_LIMIT_LONG_SHIFT);
 	rtw_write16(padapter, REG_RL, val16);
@@ -5175,7 +5175,6 @@ s32 c2h_handler_8723d(_adapter *adapter, u8 id, u8 seq, u8 plen, u8 *payload)
 		break;
 	}
 
-exit:
 	return ret;
 }
 
@@ -5395,14 +5394,14 @@ void SetHwReg8723D(PADAPTER padapter, u8 variable, u8 *val)
 		if (ctrl != 0) {
 			hwctrl |= AcmHw_HwEn;
 
-		if (ctrl & BIT(1)) /* BE */
-			hwctrl |= AcmHw_BeqEn;
+			if (ctrl & BIT(1)) /* BE */
+				hwctrl |= AcmHw_BeqEn;
 
-		if (ctrl & BIT(2)) /* VI */
-			hwctrl |= AcmHw_ViqEn;
+			if (ctrl & BIT(2)) /* VI */
+				hwctrl |= AcmHw_ViqEn;
 
-		if (ctrl & BIT(3)) /* VO */
-			hwctrl |= AcmHw_VoqEn;
+			if (ctrl & BIT(3)) /* VO */
+				hwctrl |= AcmHw_VoqEn;
 		}
 
 		RTW_INFO("[HW_VAR_ACM_CTRL] Write 0x%02X\n", hwctrl);

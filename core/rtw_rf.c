@@ -951,7 +951,9 @@ const struct country_chplan *rtw_get_chplan_from_country(const char *country_cod
 		}
 	}
 
+#if !defined(CONFIG_CUSTOMIZED_COUNTRY_CHPLAN_MAP) && RTW_DEF_MODULE_REGULATORY_CERT
 exit:
+#endif
 	#if RTW_DEF_MODULE_REGULATORY_CERT
 	if (ent && !(COUNTRY_CHPLAN_DEF_MODULE_FALGS(ent) & RTW_DEF_MODULE_REGULATORY_CERT))
 		ent = NULL;
