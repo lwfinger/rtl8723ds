@@ -1500,7 +1500,7 @@ u8 rtw_joinbss_cmd(_adapter  *padapter, struct wlan_network *pnetwork)
 #endif /* CONFIG_80211N_HT */
 
 #ifdef CONFIG_RTW_80211R
-	/*IEEE802.11-2012 Std. Table 8-101¡XAKM suite selectors*/
+	/*IEEE802.11-2012 Std. Table 8-101 XAKM suite selectors*/
 	if ((rtw_chk_ft_flags(padapter, RTW_FT_STA_SUPPORTED)) &&
 		((psecuritypriv->rsn_akm_suite_type == 3) || (psecuritypriv->rsn_akm_suite_type == 4))
 		) {
