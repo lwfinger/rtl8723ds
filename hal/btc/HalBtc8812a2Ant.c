@@ -1788,7 +1788,7 @@ void halbtc8812a2ant_tdma_duration_adjust(IN struct btc_coexist *btcoexist,
 			if (dn <= 0)
 				dn = 0;
 
-			if (up >= n) {	/* if 連續 n 個2秒 retry count為0, 則調寬WiFi duration */
+			if (up >= n) {	/* if retry count during continuous n*2 seconds is 0, enlarge WiFi duration */
 				wait_count = 0;
 				n = 3;
 				up = 0;
@@ -1803,13 +1803,13 @@ void halbtc8812a2ant_tdma_duration_adjust(IN struct btc_coexist *btcoexist,
 			if (up <= 0)
 				up = 0;
 
-			if (dn == 2) {	/* if 連續 2 個2秒 retry count< 3, 則調窄WiFi duration */
+			if (dn == 2) {	/* if continuous 2 retry count(every 2 seconds) >0 and < 3, reduce WiFi duration */
 				if (wait_count <= 2)
-					m++; /* 避免一直在兩個level中來回 */
+					m++; /* to avoid loop between the two levels */
 				else
 					m = 1;
 
-				if (m >= 20)  /* m 最大值 = 20 ' 最大120秒 recheck是否調整 WiFi duration. */
+				if (m >= 20)  /* maximum of m = 20 ' will recheck if need to adjust wifi duration in maximum time interval 120 seconds */
 					m = 20;
 
 				n = 3 * m;
@@ -1818,13 +1818,13 @@ void halbtc8812a2ant_tdma_duration_adjust(IN struct btc_coexist *btcoexist,
 				wait_count = 0;
 				result = -1;
 			}
-		} else { /* retry count > 3, 只要1次 retry count > 3, 則調窄WiFi duration */
+		} else { /* retry count > 3, once retry count > 3, to reduce WiFi duration */
 			if (wait_count == 1)
-				m++; /* 避免一直在兩個level中來回 */
+				m++; /* to avoid loop between the two levels */
 			else
 				m = 1;
 
-			if (m >= 20)  /* m 最大值 = 20 ' 最大120秒 recheck是否調整 WiFi duration. */
+			if (m >= 20)  /* maximum of m = 20 ' will recheck if need to adjust wifi duration in maximum time interval 120 seconds */
 				m = 20;
 
 			n = 3 * m;
