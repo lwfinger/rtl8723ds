@@ -228,6 +228,7 @@ s32 sd_cmd52_write(struct intf_hdl *pintfhdl, u32 addr, u32 cnt, u8 *pdata)
 	int err = 0, i;
 	struct sdio_func *func;
 	bool claim_needed;
+	static int count;
 
 	padapter = pintfhdl->padapter;
 	psdiodev = pintfhdl->pintf_dev;
@@ -247,8 +248,25 @@ s32 sd_cmd52_write(struct intf_hdl *pintfhdl, u32 addr, u32 cnt, u8 *pdata)
 	if (claim_needed)
 		sdio_release_host(func);
 
-
+	if (count++ < 300)
+		pr_info("****** vendor driver write: addr 0x%x, cnt %d, data 0x%x\n", addr, cnt, (u32)*pdata);
 	return err;
+}
+
+static void rtw_log_write(int count, u32 addr, u32 value)
+{
+	static int count_out;
+
+	if (count_out++ < 300)
+		pr_info("****** Vendor write: count %d, addr 0x%x, data read 0x%x\n", count, addr, value);
+}
+
+static void rtw_log_read(int count, u32 addr, u32 value)
+{
+	static int count_out;
+
+	if (count_out++ < 300)
+		pr_info("****** Vendor read: count %d, addr 0x%x, data read 0x%x\n", count, addr, value);
 }
 
 u8 _sd_read8(struct intf_hdl *pintfhdl, u32 addr, s32 *err)
@@ -276,6 +294,7 @@ u8 _sd_read8(struct intf_hdl *pintfhdl, u32 addr, s32 *err)
 	if (err && *err)
 		RTW_ERR("%s: FAIL!(%d) addr=0x%05x\n", __func__, *err, addr);
 
+	rtw_log_read(1, addr, (u32)v);
 
 	return v;
 }
@@ -310,7 +329,7 @@ u8 sd_read8(struct intf_hdl *pintfhdl, u32 addr, s32 *err)
 	if (err && *err)
 		RTW_ERR("%s: FAIL!(%d) addr=0x%05x\n", __func__, *err, addr);
 
-
+	rtw_log_read(1, addr, (u32)v);
 	return v;
 }
 
@@ -344,6 +363,7 @@ u16 sd_read16(struct intf_hdl *pintfhdl, u32 addr, s32 *err)
 	if (err && *err)
 		RTW_ERR("%s: FAIL!(%d) addr=0x%05x\n", __func__, *err, addr);
 
+	rtw_log_read(2, addr, (u32)v);
 
 	return  v;
 }
@@ -403,6 +423,7 @@ u32 _sd_read32(struct intf_hdl *pintfhdl, u32 addr, s32 *err)
 
 	}
 
+	rtw_log_read(4, addr, (u32)v);
 
 	return  v;
 }
@@ -470,6 +491,7 @@ u32 sd_read32(struct intf_hdl *pintfhdl, u32 addr, s32 *err)
 
 	}
 
+	rtw_log_read(4, addr, (u32)v);
 
 	return  v;
 }
@@ -503,6 +525,7 @@ void sd_write8(struct intf_hdl *pintfhdl, u32 addr, u8 v, s32 *err)
 		sdio_release_host(func);
 	if (err && *err)
 		RTW_ERR("%s: FAIL!(%d) addr=0x%05x val=0x%02x\n", __func__, *err, addr, v);
+	rtw_log_write(1, addr, (u32)v);
 
 }
 
@@ -534,6 +557,7 @@ void sd_write16(struct intf_hdl *pintfhdl, u32 addr, u16 v, s32 *err)
 		sdio_release_host(func);
 	if (err && *err)
 		RTW_ERR("%s: FAIL!(%d) addr=0x%05x val=0x%04x\n", __func__, *err, addr, v);
+	rtw_log_write(2, addr, (u32)v);
 
 }
 
@@ -587,6 +611,7 @@ void _sd_write32(struct intf_hdl *pintfhdl, u32 addr, u32 v, s32 *err)
 			RTW_ERR("%s: (%d) addr=0x%05x val=0x%08x, try_cnt=%d\n", __func__, *err, addr, v, i);
 
 	}
+	rtw_log_write(4, addr, (u32)v);
 
 }
 
@@ -648,6 +673,7 @@ void sd_write32(struct intf_hdl *pintfhdl, u32 addr, u32 v, s32 *err)
 		else
 			RTW_ERR("%s: (%d) addr=0x%05x val=0x%08x, try_cnt=%d\n", __func__, *err, addr, v, i);
 	}
+	rtw_log_write(4, addr, (u32)v);
 
 }
 #endif /* !RTW_HALMAC */
@@ -708,7 +734,6 @@ s32 _sd_read(struct intf_hdl *pintfhdl, u32 addr, u32 cnt, void *pdata)
 
 	if (err == (-ESHUTDOWN) || err == (-ENODEV) || err == (-ENOMEDIUM) || err == (-ETIMEDOUT))
 		rtw_set_surprise_removed(padapter);
-
 
 	return err;
 }
@@ -811,7 +836,6 @@ s32 _sd_write(struct intf_hdl *pintfhdl, u32 addr, u32 cnt, void *pdata)
 	err = sdio_memcpy_toio(func, addr, pdata, size);
 	if (err)
 		RTW_ERR("%s: FAIL(%d)! ADDR=%#x Size=%d(%d)\n", __func__, err, addr, cnt, size);
-
 
 	return err;
 }
