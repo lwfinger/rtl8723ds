@@ -1552,7 +1552,7 @@ int rtw_change_ifname(_adapter *padapter, const char *ifname)
 #else
 	dev_addr_set(pnetdev, adapter_mac_addr(padapter));
 #endif
-
+	pr_info("****** vendor driver: MAC address %pM\n", adapter_mac_addr(padapter));
 	ret = register_netdevice(pnetdev);
 
 	if (ret != 0) {
